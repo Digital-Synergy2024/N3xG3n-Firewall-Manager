@@ -109,6 +109,7 @@ N3xG3n Firewall Manager is a comprehensive GUI-based tool for managing Windows F
      ```
 
 4. Start the application:
+   - Run the N3xG3n_FireWall_Manager.exe
      ```
 
 ---
@@ -133,7 +134,6 @@ N3xG3n Firewall Manager is a comprehensive GUI-based tool for managing Windows F
 
 - **`N3xG3n_FireWall_Manager.py`**: The main Python script for the application.
 - **`build_firewall_manager.bat`**: Batch script to build the standalone executable using PyInstaller.
-- **`start_firewall_manager.bat`**: Batch script to launch the application.
 - **`icon.ico`**: Icon file for the application.
 - **`users.json`**: Stores user credentials (created at runtime).
 - **`firewall_manager.txt`**: Action log file (created at runtime).
@@ -202,4 +202,4 @@ For questions or support, please contact:
 - **Email**: jarrodz@digital-synergy.org
 - **GitHub**: [Digital-Synergy2024](https://github.com/Digital-Synergy2024)
 - **Website**:
-[Digital-Synergy.org](https://Digital-Synergy.ore)
+[Digital-Synergy.org](https://Digital-Synergy.org)
