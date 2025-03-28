@@ -294,7 +294,7 @@ class FirewallManagerApp:
         print("Checking for updates...")
 
         try:
-            update_url = "http://162.248.94.164/N3xG3n_Firewall_Manager/version.txt"  
+            update_url = "http://0.0.0.0/N3xG3n_Firewall_Manager/version.txt"  
             response = requests.get(update_url, timeout=5)
             response.raise_for_status()
             latest_version = response.text.strip()
@@ -334,7 +334,7 @@ class FirewallManagerApp:
     def download_and_update(self):
         
         try:
-            update_url = "http://162.248.94.164/N3xG3n_Firewall_Manager/N3xG3n_FireWall_Manager.exe"
+            update_url = "http://0.0.0.0/N3xG3n_Firewall_Manager/N3xG3n_FireWall_Manager.exe"
             temp_file = "N3xG3n_FireWall_Manager_update.exe"
 
             with requests.get(update_url, stream=True) as response:
