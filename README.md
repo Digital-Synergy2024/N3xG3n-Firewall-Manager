@@ -10,6 +10,10 @@ N3xG3n Firewall Manager is a comprehensive GUI-based tool for managing Windows F
 
 ---
 
+![N3xG3n Firewall Manager Screenshot](N3xG3n_FrieWall_manager.png)
+
+---
+
 ## Table of Contents
 1. [Features](#features)
 2. [Installation](#installation)
