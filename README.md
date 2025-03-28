@@ -201,3 +201,5 @@ This project is licensed under the MIT License. See the `LICENSE` file for detai
 For questions or support, please contact:
 - **Email**: jarrodz@digital-synergy.org
 - **GitHub**: [Digital-Synergy2024](https://github.com/Digital-Synergy2024)
+- **Website**:
+[Digital-Synergy.org](https://Digital-Synergy.ore)
