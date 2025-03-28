@@ -3,24 +3,24 @@ from tkinter import messagebox, simpledialog, filedialog
 import subprocess
 import ctypes
 import os
-import string  # For generating random strings (if needed)
+import string
 import time
 from datetime import datetime
 import getpass
 import sys
-import shutil  # For checking Python executable
-import json  # Add import for JSON
-import bcrypt  # Add import for bcrypt
-import urllib.request  # Add import for downloading files
-import ssl  # Add import for SSL context
-import psutil  # Add import for resource monitoring
-import matplotlib.pyplot as plt  # Add import for visualization
-import pandas as pd  # Add import for data handling (CSV/Excel)
-from io import BytesIO  # Add import for in-memory file handling
-import traceback  # Add import for traceback
+import shutil
+import json 
+import bcrypt 
+import urllib.request
+import ssl  
+import psutil  
+import matplotlib.pyplot as plt
+import pandas as pd
+from io import BytesIO
+import traceback
 import logging
-import threading  # Add import for threading to handle long-running tasks
-import requests  # Add import for making HTTP requests (if needed)   
+import threading
+import requests  
 
 # Configure logging to capture all output, including restarts
 logging.basicConfig(
@@ -311,7 +311,7 @@ class FirewallManagerApp:
         print("Checking for updates...")
 
         try:
-            update_url = "http://162.248.94.164/N3xG3n_Firewall_Manager/version.txt"  # Replace with your VPS URL
+            update_url = "http://0.0.0.0/N3xG3n_Firewall_Manager/version.txt"  # Replace with your VPS URL
             response = requests.get(update_url, timeout=5)
             response.raise_for_status()
             latest_version = response.text.strip()
@@ -351,7 +351,7 @@ class FirewallManagerApp:
     def download_and_update(self):
         
         try:
-            update_url = "http://162.248.94.164/N3xG3n_Firewall_Manager/N3xG3n_FireWall_Manager.exe"  # Replace with your VPS URL
+            update_url = "http://0.0.0.0/N3xG3n_Firewall_Manager/N3xG3n_FireWall_Manager.exe"  # Replace with your VPS URL
             temp_file = "N3xG3n_FireWall_Manager_update.exe"
 
             with requests.get(update_url, stream=True) as response:
