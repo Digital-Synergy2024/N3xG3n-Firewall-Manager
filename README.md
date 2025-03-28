@@ -1,12 +1,12 @@
-# NexG3n Firewall Manager
+# N3xG3n Firewall Manager
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/Digital-Synergy2024/NexG3n-Firewall-Manager)
-![GitHub issues](https://img.shields.io/github/issues/Digital-Synergy2024/NexG3n-Firewall-Manager)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/Digital-Synergy2024/NexG3n-Firewall-Manager)
-![GitHub license](https://img.shields.io/github/license/Digital-Synergy2024/NexG3n-Firewall-Manager)
-![GitHub stars](https://img.shields.io/github/stars/Digital-Synergy2024/NexG3n-Firewall-Manager?style=social)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/Digital-Synergy2024/N3xG3n-Firewall-Manager)
+![GitHub issues](https://img.shields.io/github/issues/Digital-Synergy2024/N3xG3n-Firewall-Manager)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/Digital-Synergy2024/N3xG3n-Firewall-Manager)
+![GitHub license](https://img.shields.io/github/license/Digital-Synergy2024/N3xG3n-Firewall-Manager)
+![GitHub stars](https://img.shields.io/github/stars/Digital-Synergy2024/N3xG3n-Firewall-Manager?style=social)
 
-NexG3n Firewall Manager is a comprehensive GUI-based tool for managing Windows Firewall settings. It provides an intuitive interface for configuring firewall rules, monitoring network traffic, and performing advanced network diagnostics. Designed for both novice and advanced users, this tool simplifies firewall management while offering powerful features.
+N3xG3n Firewall Manager is a comprehensive GUI-based tool for managing Windows Firewall settings. It provides an intuitive interface for configuring firewall rules, monitoring network traffic, and performing advanced network diagnostics. Designed for both novice and advanced users, this tool simplifies firewall management while offering powerful features.
 
 ---
 
@@ -93,8 +93,8 @@ NexG3n Firewall Manager is a comprehensive GUI-based tool for managing Windows F
 ### **Steps**
 1. Clone the repository:
    ```bash
-   git clone https://github.com/Digital-Synergy2024/NexG3n-Firewall-Manager.git
-   cd NexG3n-Firewall-Manager
+   git clone https://github.com/Digital-Synergy2024/N3xG3n-Firewall-Manager.git
+   cd N3xG3n-Firewall-Manager
    ```
 
 2. Install dependencies:
@@ -109,9 +109,6 @@ NexG3n Firewall Manager is a comprehensive GUI-based tool for managing Windows F
      ```
 
 4. Start the application:
-   - Run the `start_firewall_manager.bat` script:
-     ```bash
-     start_firewall_manager.bat
      ```
 
 ---
