@@ -1,0 +1,378 @@
+2025-03-28 08:24:32,791 - INFO - Application started.
+2025-03-28 08:24:32,792 - INFO - Checking if the script is running as an administrator.
+2025-03-28 08:24:32,793 - DEBUG - Admin status: False
+2025-03-28 08:24:32,793 - INFO - Admin status: False
+2025-03-28 08:24:32,793 - DEBUG - Admin privileges not detected. Attempting to relaunch as admin.
+2025-03-28 08:24:32,793 - INFO - Attempting to relaunch the script with administrator privileges.
+2025-03-28 08:24:34,253 - INFO - Relaunched successfully. Exiting current instance.
+2025-03-28 08:24:35,421 - INFO - Application started.
+2025-03-28 08:24:35,421 - INFO - Checking if the script is running as an administrator.
+2025-03-28 08:24:35,422 - DEBUG - Admin status: True
+2025-03-28 08:24:35,422 - INFO - Admin status: True
+2025-03-28 08:24:35,422 - INFO - Admin privileges detected. Proceeding with application initialization.
+2025-03-28 08:24:35,422 - INFO - Checking Python installation.
+2025-03-28 08:24:35,422 - INFO - Checking Python installation.
+2025-03-28 08:24:35,423 - INFO - Python installation check completed.
+2025-03-28 08:24:35,423 - INFO - Checking dependencies.
+2025-03-28 08:24:35,423 - INFO - Initialization checks completed successfully.
+2025-03-28 08:24:35,423 - INFO - Starting the application entry point.
+2025-03-28 08:24:35,423 - INFO - Checking if the script is running as an administrator.
+2025-03-28 08:24:35,423 - INFO - Admin status: True
+2025-03-28 08:24:35,423 - INFO - Launching main application.
+2025-03-28 08:24:35,423 - INFO - Starting main function.
+2025-03-28 08:24:35,423 - INFO - Entering main function.
+2025-03-28 08:24:35,423 - INFO - Checking if the script is running as an administrator.
+2025-03-28 08:24:35,423 - INFO - Admin status: True
+2025-03-28 08:24:35,423 - INFO - Checking Python installation.
+2025-03-28 08:24:35,424 - INFO - Python installation check completed.
+2025-03-28 08:24:35,424 - INFO - Checking dependencies.
+2025-03-28 08:24:35,470 - INFO - Dependency check completed.
+2025-03-28 08:24:35,507 - INFO - Initializing FirewallManagerApp.
+2025-03-28 08:24:35,523 - INFO - Ensuring log files exist.
+2025-03-28 08:24:35,524 - INFO - Log files check completed.
+2025-03-28 08:24:35,524 - INFO - Loading user credentials.
+2025-03-28 08:24:35,524 - INFO - Logging action: Loaded user credentials from file.
+2025-03-28 08:24:35,524 - INFO - User credentials loaded successfully.
+2025-03-28 08:24:35,524 - INFO - Starting session monitor.
+2025-03-28 08:24:35,525 - INFO - Starting session monitor.
+2025-03-28 08:24:35,525 - INFO - Session timeout is disabled.
+2025-03-28 08:24:35,525 - INFO - Creating main menu.
+2025-03-28 08:24:35,525 - INFO - Executing function safely: _create_main_menu
+2025-03-28 08:24:35,525 - INFO - Clearing window.
+2025-03-28 08:24:35,525 - INFO - Window cleared successfully.
+2025-03-28 08:24:35,525 - INFO - Resetting activity timer.
+2025-03-28 08:24:35,525 - INFO - Activity timer reset.
+2025-03-28 08:24:35,527 - INFO - Applying button style.
+2025-03-28 08:24:35,527 - INFO - Applying button style.
+2025-03-28 08:24:35,527 - INFO - Applying button style.
+2025-03-28 08:24:35,528 - INFO - Applying button style.
+2025-03-28 08:24:35,528 - INFO - Applying button style.
+2025-03-28 08:24:35,528 - INFO - Applying button style.
+2025-03-28 08:24:35,529 - INFO - Applying button style.
+2025-03-28 08:24:35,529 - INFO - Applying button style.
+2025-03-28 08:24:35,530 - INFO - Applying button style.
+2025-03-28 08:24:35,530 - INFO - Applying button style.
+2025-03-28 08:24:35,530 - INFO - Applying button style.
+2025-03-28 08:24:35,531 - INFO - Applying button style.
+2025-03-28 08:24:35,531 - INFO - Applying button style.
+2025-03-28 08:24:35,531 - INFO - Applying button style.
+2025-03-28 08:24:35,532 - INFO - Applying button style.
+2025-03-28 08:24:35,532 - INFO - Applying button style.
+2025-03-28 08:24:35,532 - INFO - Applying button style.
+2025-03-28 08:24:35,532 - INFO - Applying button style.
+2025-03-28 08:24:35,533 - INFO - Applying button style.
+2025-03-28 08:24:35,533 - INFO - Applying button style.
+2025-03-28 08:24:35,533 - INFO - Applying button style.
+2025-03-28 08:24:35,534 - INFO - Applying button style.
+2025-03-28 08:24:35,534 - INFO - Applying button style.
+2025-03-28 08:24:35,534 - INFO - Applying button style.
+2025-03-28 08:24:35,534 - INFO - Applying button style.
+2025-03-28 08:24:35,535 - INFO - Applying button style.
+2025-03-28 08:24:35,535 - INFO - Applying button style.
+2025-03-28 08:24:35,535 - INFO - Applying button style.
+2025-03-28 08:24:35,535 - INFO - Applying button style.
+2025-03-28 08:24:35,535 - INFO - Applying button style.
+2025-03-28 08:24:35,536 - INFO - Applying button style.
+2025-03-28 08:24:35,536 - INFO - Applying button style.
+2025-03-28 08:24:35,536 - INFO - Applying button style.
+2025-03-28 08:24:35,536 - INFO - Applying button style.
+2025-03-28 08:24:35,537 - INFO - Applying button style.
+2025-03-28 08:24:35,537 - INFO - Main menu created successfully.
+2025-03-28 08:24:35,537 - INFO - FirewallManagerApp initialized successfully.
+2025-03-28 08:24:35,537 - INFO - Application initialized successfully. Starting authentication.
+2025-03-28 08:24:35,537 - INFO - Authentication bypassed.
+2025-03-28 08:24:35,537 - INFO - Creating main menu.
+2025-03-28 08:24:35,537 - INFO - Executing function safely: _create_main_menu
+2025-03-28 08:24:35,537 - INFO - Clearing window.
+2025-03-28 08:24:35,548 - INFO - Window cleared successfully.
+2025-03-28 08:24:35,548 - INFO - Resetting activity timer.
+2025-03-28 08:24:35,548 - INFO - Activity timer reset.
+2025-03-28 08:24:35,549 - INFO - Applying button style.
+2025-03-28 08:24:35,549 - INFO - Applying button style.
+2025-03-28 08:24:35,549 - INFO - Applying button style.
+2025-03-28 08:24:35,550 - INFO - Applying button style.
+2025-03-28 08:24:35,550 - INFO - Applying button style.
+2025-03-28 08:24:35,550 - INFO - Applying button style.
+2025-03-28 08:24:35,550 - INFO - Applying button style.
+2025-03-28 08:24:35,551 - INFO - Applying button style.
+2025-03-28 08:24:35,551 - INFO - Applying button style.
+2025-03-28 08:24:35,551 - INFO - Applying button style.
+2025-03-28 08:24:35,551 - INFO - Applying button style.
+2025-03-28 08:24:35,552 - INFO - Applying button style.
+2025-03-28 08:24:35,552 - INFO - Applying button style.
+2025-03-28 08:24:35,552 - INFO - Applying button style.
+2025-03-28 08:24:35,552 - INFO - Applying button style.
+2025-03-28 08:24:35,553 - INFO - Applying button style.
+2025-03-28 08:24:35,553 - INFO - Applying button style.
+2025-03-28 08:24:35,553 - INFO - Applying button style.
+2025-03-28 08:24:35,554 - INFO - Applying button style.
+2025-03-28 08:24:35,554 - INFO - Applying button style.
+2025-03-28 08:24:35,554 - INFO - Applying button style.
+2025-03-28 08:24:35,554 - INFO - Applying button style.
+2025-03-28 08:24:35,554 - INFO - Applying button style.
+2025-03-28 08:24:35,555 - INFO - Applying button style.
+2025-03-28 08:24:35,555 - INFO - Applying button style.
+2025-03-28 08:24:35,555 - INFO - Applying button style.
+2025-03-28 08:24:35,555 - INFO - Applying button style.
+2025-03-28 08:24:35,556 - INFO - Applying button style.
+2025-03-28 08:24:35,556 - INFO - Applying button style.
+2025-03-28 08:24:35,556 - INFO - Applying button style.
+2025-03-28 08:24:35,556 - INFO - Applying button style.
+2025-03-28 08:24:35,557 - INFO - Applying button style.
+2025-03-28 08:24:35,557 - INFO - Applying button style.
+2025-03-28 08:24:35,557 - INFO - Applying button style.
+2025-03-28 08:24:35,557 - INFO - Applying button style.
+2025-03-28 08:24:35,558 - INFO - Main menu created successfully.
+2025-03-28 08:24:35,558 - INFO - Authentication completed. Entering Tkinter mainloop.
+2025-03-28 08:25:10,930 - INFO - Application started.
+2025-03-28 08:25:10,930 - INFO - Checking if the script is running as an administrator.
+2025-03-28 08:25:10,931 - DEBUG - Admin status: False
+2025-03-28 08:25:10,931 - INFO - Admin status: False
+2025-03-28 08:25:10,931 - DEBUG - Admin privileges not detected. Attempting to relaunch as admin.
+2025-03-28 08:25:10,931 - INFO - Attempting to relaunch the script with administrator privileges.
+2025-03-28 08:25:12,604 - INFO - Relaunched successfully. Exiting current instance.
+2025-03-28 08:25:13,752 - INFO - Application started.
+2025-03-28 08:25:13,752 - INFO - Checking if the script is running as an administrator.
+2025-03-28 08:25:13,754 - DEBUG - Admin status: True
+2025-03-28 08:25:13,754 - INFO - Admin status: True
+2025-03-28 08:25:13,754 - INFO - Admin privileges detected. Proceeding with application initialization.
+2025-03-28 08:25:13,754 - INFO - Checking Python installation.
+2025-03-28 08:25:13,754 - INFO - Checking Python installation.
+2025-03-28 08:25:13,755 - INFO - Python installation check completed.
+2025-03-28 08:25:13,755 - INFO - Checking dependencies.
+2025-03-28 08:25:13,755 - INFO - Initialization checks completed successfully.
+2025-03-28 08:25:13,755 - INFO - Starting the application entry point.
+2025-03-28 08:25:13,755 - INFO - Checking if the script is running as an administrator.
+2025-03-28 08:25:13,755 - INFO - Admin status: True
+2025-03-28 08:25:13,755 - INFO - Launching main application.
+2025-03-28 08:25:13,755 - INFO - Starting main function.
+2025-03-28 08:25:13,755 - INFO - Entering main function.
+2025-03-28 08:25:13,755 - INFO - Checking if the script is running as an administrator.
+2025-03-28 08:25:13,755 - INFO - Admin status: True
+2025-03-28 08:25:13,755 - INFO - Checking Python installation.
+2025-03-28 08:25:13,756 - INFO - Python installation check completed.
+2025-03-28 08:25:13,756 - INFO - Checking dependencies.
+2025-03-28 08:25:13,800 - INFO - Dependency check completed.
+2025-03-28 08:25:13,837 - INFO - Initializing FirewallManagerApp.
+2025-03-28 08:25:13,853 - INFO - Ensuring log files exist.
+2025-03-28 08:25:13,853 - INFO - Log files check completed.
+2025-03-28 08:25:13,854 - INFO - Loading user credentials.
+2025-03-28 08:25:13,854 - INFO - Logging action: Loaded user credentials from file.
+2025-03-28 08:25:13,854 - INFO - User credentials loaded successfully.
+2025-03-28 08:25:13,854 - INFO - Starting session monitor.
+2025-03-28 08:25:13,854 - INFO - Starting session monitor.
+2025-03-28 08:25:13,854 - INFO - Session timeout is disabled.
+2025-03-28 08:25:13,854 - INFO - Creating main menu.
+2025-03-28 08:25:13,854 - INFO - Executing function safely: _create_main_menu
+2025-03-28 08:25:13,855 - INFO - Clearing window.
+2025-03-28 08:25:13,855 - INFO - Window cleared successfully.
+2025-03-28 08:25:13,855 - INFO - Resetting activity timer.
+2025-03-28 08:25:13,855 - INFO - Activity timer reset.
+2025-03-28 08:25:13,857 - INFO - Applying button style.
+2025-03-28 08:25:13,857 - INFO - Applying button style.
+2025-03-28 08:25:13,858 - INFO - Applying button style.
+2025-03-28 08:25:13,858 - INFO - Applying button style.
+2025-03-28 08:25:13,858 - INFO - Applying button style.
+2025-03-28 08:25:13,858 - INFO - Applying button style.
+2025-03-28 08:25:13,859 - INFO - Applying button style.
+2025-03-28 08:25:13,859 - INFO - Applying button style.
+2025-03-28 08:25:13,859 - INFO - Applying button style.
+2025-03-28 08:25:13,860 - INFO - Applying button style.
+2025-03-28 08:25:13,860 - INFO - Applying button style.
+2025-03-28 08:25:13,860 - INFO - Applying button style.
+2025-03-28 08:25:13,860 - INFO - Applying button style.
+2025-03-28 08:25:13,861 - INFO - Applying button style.
+2025-03-28 08:25:13,861 - INFO - Applying button style.
+2025-03-28 08:25:13,861 - INFO - Applying button style.
+2025-03-28 08:25:13,861 - INFO - Applying button style.
+2025-03-28 08:25:13,862 - INFO - Applying button style.
+2025-03-28 08:25:13,862 - INFO - Applying button style.
+2025-03-28 08:25:13,862 - INFO - Applying button style.
+2025-03-28 08:25:13,862 - INFO - Applying button style.
+2025-03-28 08:25:13,863 - INFO - Applying button style.
+2025-03-28 08:25:13,863 - INFO - Applying button style.
+2025-03-28 08:25:13,863 - INFO - Applying button style.
+2025-03-28 08:25:13,863 - INFO - Applying button style.
+2025-03-28 08:25:13,864 - INFO - Applying button style.
+2025-03-28 08:25:13,864 - INFO - Applying button style.
+2025-03-28 08:25:13,864 - INFO - Applying button style.
+2025-03-28 08:25:13,864 - INFO - Applying button style.
+2025-03-28 08:25:13,865 - INFO - Applying button style.
+2025-03-28 08:25:13,865 - INFO - Applying button style.
+2025-03-28 08:25:13,865 - INFO - Applying button style.
+2025-03-28 08:25:13,865 - INFO - Applying button style.
+2025-03-28 08:25:13,866 - INFO - Applying button style.
+2025-03-28 08:25:13,866 - INFO - Applying button style.
+2025-03-28 08:25:13,866 - INFO - Main menu created successfully.
+2025-03-28 08:25:13,866 - INFO - FirewallManagerApp initialized successfully.
+2025-03-28 08:25:13,866 - INFO - Application initialized successfully. Starting authentication.
+2025-03-28 08:25:13,866 - INFO - Authentication bypassed.
+2025-03-28 08:25:13,866 - INFO - Creating main menu.
+2025-03-28 08:25:13,866 - INFO - Executing function safely: _create_main_menu
+2025-03-28 08:25:13,866 - INFO - Clearing window.
+2025-03-28 08:25:13,877 - INFO - Window cleared successfully.
+2025-03-28 08:25:13,877 - INFO - Resetting activity timer.
+2025-03-28 08:25:13,877 - INFO - Activity timer reset.
+2025-03-28 08:25:13,878 - INFO - Applying button style.
+2025-03-28 08:25:13,878 - INFO - Applying button style.
+2025-03-28 08:25:13,879 - INFO - Applying button style.
+2025-03-28 08:25:13,879 - INFO - Applying button style.
+2025-03-28 08:25:13,879 - INFO - Applying button style.
+2025-03-28 08:25:13,880 - INFO - Applying button style.
+2025-03-28 08:25:13,880 - INFO - Applying button style.
+2025-03-28 08:25:13,880 - INFO - Applying button style.
+2025-03-28 08:25:13,880 - INFO - Applying button style.
+2025-03-28 08:25:13,881 - INFO - Applying button style.
+2025-03-28 08:25:13,881 - INFO - Applying button style.
+2025-03-28 08:25:13,881 - INFO - Applying button style.
+2025-03-28 08:25:13,881 - INFO - Applying button style.
+2025-03-28 08:25:13,882 - INFO - Applying button style.
+2025-03-28 08:25:13,882 - INFO - Applying button style.
+2025-03-28 08:25:13,882 - INFO - Applying button style.
+2025-03-28 08:25:13,882 - INFO - Applying button style.
+2025-03-28 08:25:13,883 - INFO - Applying button style.
+2025-03-28 08:25:13,883 - INFO - Applying button style.
+2025-03-28 08:25:13,883 - INFO - Applying button style.
+2025-03-28 08:25:13,883 - INFO - Applying button style.
+2025-03-28 08:25:13,884 - INFO - Applying button style.
+2025-03-28 08:25:13,884 - INFO - Applying button style.
+2025-03-28 08:25:13,884 - INFO - Applying button style.
+2025-03-28 08:25:13,884 - INFO - Applying button style.
+2025-03-28 08:25:13,885 - INFO - Applying button style.
+2025-03-28 08:25:13,885 - INFO - Applying button style.
+2025-03-28 08:25:13,885 - INFO - Applying button style.
+2025-03-28 08:25:13,885 - INFO - Applying button style.
+2025-03-28 08:25:13,886 - INFO - Applying button style.
+2025-03-28 08:25:13,886 - INFO - Applying button style.
+2025-03-28 08:25:13,886 - INFO - Applying button style.
+2025-03-28 08:25:13,886 - INFO - Applying button style.
+2025-03-28 08:25:13,886 - INFO - Applying button style.
+2025-03-28 08:25:13,887 - INFO - Applying button style.
+2025-03-28 08:25:13,887 - INFO - Main menu created successfully.
+2025-03-28 08:25:13,887 - INFO - Authentication completed. Entering Tkinter mainloop.
+2025-03-28 08:27:10,038 - INFO - Application started.
+2025-03-28 08:27:10,038 - INFO - Checking if the script is running as an administrator.
+2025-03-28 08:27:10,039 - DEBUG - Admin status: False
+2025-03-28 08:27:10,039 - INFO - Admin status: False
+2025-03-28 08:27:10,039 - DEBUG - Admin privileges not detected. Attempting to relaunch as admin.
+2025-03-28 08:27:10,039 - INFO - Attempting to relaunch the script with administrator privileges.
+2025-03-28 08:27:11,432 - INFO - Relaunched successfully. Exiting current instance.
+2025-03-28 08:27:12,641 - INFO - Application started.
+2025-03-28 08:27:12,641 - INFO - Checking if the script is running as an administrator.
+2025-03-28 08:27:12,642 - DEBUG - Admin status: True
+2025-03-28 08:27:12,642 - INFO - Admin status: True
+2025-03-28 08:27:12,642 - INFO - Admin privileges detected. Proceeding with application initialization.
+2025-03-28 08:27:12,642 - INFO - Checking Python installation.
+2025-03-28 08:27:12,642 - INFO - Checking Python installation.
+2025-03-28 08:27:12,643 - INFO - Python installation check completed.
+2025-03-28 08:27:12,643 - INFO - Checking dependencies.
+2025-03-28 08:27:12,643 - INFO - Initialization checks completed successfully.
+2025-03-28 08:27:12,643 - INFO - Starting the application entry point.
+2025-03-28 08:27:12,643 - INFO - Checking if the script is running as an administrator.
+2025-03-28 08:27:12,643 - INFO - Admin status: True
+2025-03-28 08:27:12,643 - INFO - Launching main application.
+2025-03-28 08:27:12,643 - INFO - Starting main function.
+2025-03-28 08:27:12,643 - INFO - Entering main function.
+2025-03-28 08:27:12,643 - INFO - Checking if the script is running as an administrator.
+2025-03-28 08:27:12,644 - INFO - Admin status: True
+2025-03-28 08:27:12,644 - INFO - Checking Python installation.
+2025-03-28 08:27:12,644 - INFO - Python installation check completed.
+2025-03-28 08:27:12,644 - INFO - Checking dependencies.
+2025-03-28 08:27:12,690 - INFO - Dependency check completed.
+2025-03-28 08:27:12,729 - INFO - Initializing FirewallManagerApp.
+2025-03-28 08:27:12,745 - INFO - Ensuring log files exist.
+2025-03-28 08:27:12,745 - INFO - Log files check completed.
+2025-03-28 08:27:12,745 - INFO - Loading user credentials.
+2025-03-28 08:27:12,745 - INFO - Logging action: Loaded user credentials from file.
+2025-03-28 08:27:12,746 - INFO - User credentials loaded successfully.
+2025-03-28 08:27:12,746 - INFO - Starting session monitor.
+2025-03-28 08:27:12,746 - INFO - Starting session monitor.
+2025-03-28 08:27:12,746 - INFO - Session timeout is disabled.
+2025-03-28 08:27:12,746 - INFO - Creating main menu.
+2025-03-28 08:27:12,746 - INFO - Executing function safely: _create_main_menu
+2025-03-28 08:27:12,746 - INFO - Clearing window.
+2025-03-28 08:27:12,746 - INFO - Window cleared successfully.
+2025-03-28 08:27:12,746 - INFO - Resetting activity timer.
+2025-03-28 08:27:12,746 - INFO - Activity timer reset.
+2025-03-28 08:27:12,748 - INFO - Applying button style.
+2025-03-28 08:27:12,749 - INFO - Applying button style.
+2025-03-28 08:27:12,749 - INFO - Applying button style.
+2025-03-28 08:27:12,749 - INFO - Applying button style.
+2025-03-28 08:27:12,750 - INFO - Applying button style.
+2025-03-28 08:27:12,750 - INFO - Applying button style.
+2025-03-28 08:27:12,751 - INFO - Applying button style.
+2025-03-28 08:27:12,751 - INFO - Applying button style.
+2025-03-28 08:27:12,751 - INFO - Applying button style.
+2025-03-28 08:27:12,751 - INFO - Applying button style.
+2025-03-28 08:27:12,752 - INFO - Applying button style.
+2025-03-28 08:27:12,752 - INFO - Applying button style.
+2025-03-28 08:27:12,752 - INFO - Applying button style.
+2025-03-28 08:27:12,753 - INFO - Applying button style.
+2025-03-28 08:27:12,753 - INFO - Applying button style.
+2025-03-28 08:27:12,753 - INFO - Applying button style.
+2025-03-28 08:27:12,753 - INFO - Applying button style.
+2025-03-28 08:27:12,753 - INFO - Applying button style.
+2025-03-28 08:27:12,754 - INFO - Applying button style.
+2025-03-28 08:27:12,754 - INFO - Applying button style.
+2025-03-28 08:27:12,754 - INFO - Applying button style.
+2025-03-28 08:27:12,755 - INFO - Applying button style.
+2025-03-28 08:27:12,755 - INFO - Applying button style.
+2025-03-28 08:27:12,755 - INFO - Applying button style.
+2025-03-28 08:27:12,755 - INFO - Applying button style.
+2025-03-28 08:27:12,756 - INFO - Applying button style.
+2025-03-28 08:27:12,756 - INFO - Applying button style.
+2025-03-28 08:27:12,756 - INFO - Applying button style.
+2025-03-28 08:27:12,756 - INFO - Applying button style.
+2025-03-28 08:27:12,757 - INFO - Applying button style.
+2025-03-28 08:27:12,757 - INFO - Applying button style.
+2025-03-28 08:27:12,757 - INFO - Applying button style.
+2025-03-28 08:27:12,757 - INFO - Applying button style.
+2025-03-28 08:27:12,758 - INFO - Applying button style.
+2025-03-28 08:27:12,758 - INFO - Applying button style.
+2025-03-28 08:27:12,758 - INFO - Main menu created successfully.
+2025-03-28 08:27:12,758 - INFO - FirewallManagerApp initialized successfully.
+2025-03-28 08:27:12,758 - INFO - Application initialized successfully. Starting authentication.
+2025-03-28 08:27:12,758 - INFO - Authentication bypassed.
+2025-03-28 08:27:12,758 - INFO - Creating main menu.
+2025-03-28 08:27:12,758 - INFO - Executing function safely: _create_main_menu
+2025-03-28 08:27:12,758 - INFO - Clearing window.
+2025-03-28 08:27:12,769 - INFO - Window cleared successfully.
+2025-03-28 08:27:12,769 - INFO - Resetting activity timer.
+2025-03-28 08:27:12,769 - INFO - Activity timer reset.
+2025-03-28 08:27:12,770 - INFO - Applying button style.
+2025-03-28 08:27:12,771 - INFO - Applying button style.
+2025-03-28 08:27:12,771 - INFO - Applying button style.
+2025-03-28 08:27:12,771 - INFO - Applying button style.
+2025-03-28 08:27:12,771 - INFO - Applying button style.
+2025-03-28 08:27:12,772 - INFO - Applying button style.
+2025-03-28 08:27:12,772 - INFO - Applying button style.
+2025-03-28 08:27:12,772 - INFO - Applying button style.
+2025-03-28 08:27:12,772 - INFO - Applying button style.
+2025-03-28 08:27:12,773 - INFO - Applying button style.
+2025-03-28 08:27:12,773 - INFO - Applying button style.
+2025-03-28 08:27:12,773 - INFO - Applying button style.
+2025-03-28 08:27:12,773 - INFO - Applying button style.
+2025-03-28 08:27:12,774 - INFO - Applying button style.
+2025-03-28 08:27:12,774 - INFO - Applying button style.
+2025-03-28 08:27:12,774 - INFO - Applying button style.
+2025-03-28 08:27:12,774 - INFO - Applying button style.
+2025-03-28 08:27:12,775 - INFO - Applying button style.
+2025-03-28 08:27:12,775 - INFO - Applying button style.
+2025-03-28 08:27:12,775 - INFO - Applying button style.
+2025-03-28 08:27:12,775 - INFO - Applying button style.
+2025-03-28 08:27:12,776 - INFO - Applying button style.
+2025-03-28 08:27:12,776 - INFO - Applying button style.
+2025-03-28 08:27:12,776 - INFO - Applying button style.
+2025-03-28 08:27:12,776 - INFO - Applying button style.
+2025-03-28 08:27:12,777 - INFO - Applying button style.
+2025-03-28 08:27:12,777 - INFO - Applying button style.
+2025-03-28 08:27:12,777 - INFO - Applying button style.
+2025-03-28 08:27:12,777 - INFO - Applying button style.
+2025-03-28 08:27:12,778 - INFO - Applying button style.
+2025-03-28 08:27:12,778 - INFO - Applying button style.
+2025-03-28 08:27:12,778 - INFO - Applying button style.
+2025-03-28 08:27:12,778 - INFO - Applying button style.
+2025-03-28 08:27:12,779 - INFO - Applying button style.
+2025-03-28 08:27:12,779 - INFO - Applying button style.
+2025-03-28 08:27:12,779 - INFO - Main menu created successfully.
+2025-03-28 08:27:12,779 - INFO - Authentication completed. Entering Tkinter mainloop.
