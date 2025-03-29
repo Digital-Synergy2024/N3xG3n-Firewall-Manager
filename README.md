@@ -103,16 +103,31 @@ N3xG3n Firewall Manager is a comprehensive GUI-based tool for managing Windows F
 
 2. Install dependencies:
    ```bash
-   pip install bcrypt requests packaging psutil matplotlib pandas
+   pip install bcrypt
+   ```
+   ```
+   pip install requests
+   ```
+   ```
+   pip install packaging
+   ```
+   ```
+   pip install psutil
+   ```
+   ```
+   pip install matplotlib
+   ```
+   ```
+   pip install pandas
    ```
 
-3. Build the standalone executable (optional):
+4. Build the standalone executable (optional):
    - Run the `build_firewall_manager.bat` script to create a standalone `.exe` file:
      ```bash
      build_firewall_manager.bat
      ```
 
-4. Start the application:
+5. Start the application:
    - Run the `N3xG3n_FireWall_Manager.exe` to start the tool
      ```bash
      N3xG3n_FireWall_Manager.exe
