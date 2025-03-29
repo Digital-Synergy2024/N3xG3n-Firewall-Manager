@@ -294,7 +294,7 @@ class FirewallManagerApp:
         print("Checking for updates...")
 
         try:
-            update_url = "http://0.0.0.0/N3xG3n_Firewall_Manager/version.txt"  
+            update_url = "http://162.248.94.164/N3xG3n_Firewall_Manager/version.txt"  
             response = requests.get(update_url, timeout=5)
             response.raise_for_status()
             latest_version = response.text.strip()
@@ -334,7 +334,7 @@ class FirewallManagerApp:
     def download_and_update(self):
         
         try:
-            update_url = "http://0.0.0.0/N3xG3n_Firewall_Manager/N3xG3n_FireWall_Manager.exe"
+            update_url = "http://162.248.94.164/N3xG3n_Firewall_Manager/N3xG3n_FireWall_Manager.exe"
             temp_file = "N3xG3n_FireWall_Manager_update.exe"
 
             with requests.get(update_url, stream=True) as response:
@@ -732,6 +732,13 @@ class FirewallManagerApp:
             ("Advanced Rule Management", self.advanced_rule_management),
             ("View Network Traffic", self.view_network_traffic),
             ("Generate Security Audit Report", self.generate_security_audit_report),
+            ("Open Windows Commands", self.open_windows_commands),
+            # ("View System Information", self.view_system_info),
+            # ("Check for Updates", self.check_for_updates),
+            # ("Check System Health", self.check_system_health),
+            # ("View Active Processes", self.view_active_processes),
+            # ("View Active Services", self.view_active_services),
+            # ("View Active Connections", self.view_active_connections),
         ]
         for i, (text, command) in enumerate(tools_buttons):
             tk.Button(
