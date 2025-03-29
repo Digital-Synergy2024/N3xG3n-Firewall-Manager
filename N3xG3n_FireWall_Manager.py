@@ -9,26 +9,27 @@ from datetime import datetime
 import getpass
 import sys
 import shutil
-import json 
-import bcrypt 
+import json
+import bcrypt
 import urllib.request
-import ssl  
-import psutil  
+import ssl
+import psutil
 import matplotlib.pyplot as plt
 import pandas as pd
 from io import BytesIO
 import traceback
 import logging
 import threading
-import requests  
+import requests
 
 logging.basicConfig(
     filename="debug_log.txt",
     level=logging.DEBUG,
-    format="%(asctime)s - %(levelname)s - %(message)s"
+    format="%(asctime)s - %(levelname)s - %(message)s",
 )
 
 logging.info("Application started.")
+
 
 def check_python_installation():
     logging.info("Checking Python installation.")
@@ -36,51 +37,67 @@ def check_python_installation():
     if shutil.which("python") or shutil.which("python3"):
         print("Python is already installed. Proceeding with the application...")
         logging.info("Python installation check completed.")
-        return True 
+        return True
 
     print("Python is not installed.")
-    install = messagebox.askyesno("Python Not Found", "Python is not installed. Do you want to install it?")
+    install = messagebox.askyesno(
+        "Python Not Found", "Python is not installed. Do you want to install it?"
+    )
     if install:
         try:
             print("User agreed to install Python. Downloading the installer...")
-            python_installer_url = "https://www.python.org/ftp/python/3.10.9/python-3.10.9-amd64.exe"
+            python_installer_url = (
+                "https://www.python.org/ftp/python/3.10.9/python-3.10.9-amd64.exe"
+            )
             installer_path = os.path.join(os.getcwd(), "python_installer.exe")
-            
+
             ssl_context = ssl.create_default_context()
             ssl_context.check_hostname = False
             ssl_context.verify_mode = ssl.CERT_NONE
-            
-            with urllib.request.urlopen(python_installer_url, context=ssl_context) as response, open(installer_path, "wb") as out_file:
+
+            with urllib.request.urlopen(
+                python_installer_url, context=ssl_context
+            ) as response, open(installer_path, "wb") as out_file:
                 out_file.write(response.read())
             print("Python installer downloaded successfully.")
 
             print("Running the Python installer. This may take a few minutes...")
-            subprocess.run([installer_path, "/quiet", "InstallAllUsers=1", "PrependPath=1"], check=True)
+            subprocess.run(
+                [installer_path, "/quiet", "InstallAllUsers=1", "PrependPath=1"],
+                check=True,
+            )
             print("Python installation completed successfully.")
 
             os.remove(installer_path)
-            print("Installer file removed. Prompting the user to restart the application.")
-            messagebox.showinfo("Success", "Python has been installed. Please restart the application.")
+            print(
+                "Installer file removed. Prompting the user to restart the application."
+            )
+            messagebox.showinfo(
+                "Success", "Python has been installed. Please restart the application."
+            )
             logging.info("Python installation check completed.")
-            return False 
+            return False
         except Exception as e:
             print(f"Error during Python installation: {e}")
             messagebox.showerror("Error", f"Failed to install Python: {e}")
             logging.info("Python installation check completed.")
-            return False 
+            return False
     else:
         print("User declined to install Python. Exiting the application.")
-        messagebox.showinfo("Exiting", "Python is required to run this application. Exiting now.")
+        messagebox.showinfo(
+            "Exiting", "Python is required to run this application. Exiting now."
+        )
         logging.info("Python installation check completed.")
-        return False  
+        return False
+
 
 def check_dependencies():
     logging.info("Checking dependencies.")
-    
-    root = tk.Tk()
-    root.withdraw()  
 
-    print("Checking dependencies...")  
+    root = tk.Tk()
+    root.withdraw()
+
+    print("Checking dependencies...")
     dependencies = {
         "pip": "Python's package manager (pip)",
         "bcrypt": "bcrypt library for password hashing",
@@ -98,19 +115,23 @@ def check_dependencies():
         logging.info("Dependency check completed.")
         return True
 
-
     for dependency, description in dependencies.items():
-        print(f"Checking dependency: {dependency}...")  
+        print(f"Checking dependency: {dependency}...")
         try:
             if dependency == "pip":
-                subprocess.run([sys.executable, "-m", "pip", "--version"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+                subprocess.run(
+                    [sys.executable, "-m", "pip", "--version"],
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    check=True,
+                )
             else:
                 __import__(dependency)
         except ImportError:
-            print(f"Dependency missing: {dependency}") 
+            print(f"Dependency missing: {dependency}")
             missing_dependencies.append((dependency, description))
         except subprocess.CalledProcessError:
-            print(f"Dependency check failed for: {dependency}")  
+            print(f"Dependency check failed for: {dependency}")
             missing_dependencies.append((dependency, description))
 
     if not missing_dependencies:
@@ -118,54 +139,66 @@ def check_dependencies():
         with open("dependencies_installed.flag", "w") as flag_file:
             flag_file.write("Dependencies installed successfully.")
         logging.info("Dependency check completed.")
-        return True  
+        return True
 
-    missing_list = "\n".join([f"- {desc} ({dep})" for dep, desc in missing_dependencies])
-    print(f"Missing dependencies:\n{missing_list}")  
+    missing_list = "\n".join(
+        [f"- {desc} ({dep})" for dep, desc in missing_dependencies]
+    )
+    print(f"Missing dependencies:\n{missing_list}")
     install = messagebox.askyesno(
         "Missing Dependencies",
         f"The following dependencies are missing:\n\n{missing_list}\n\n"
-        "Would you like to install them now?"
+        "Would you like to install them now?",
     )
 
     if install:
         try:
             for dependency, _ in missing_dependencies:
-                print(f"Installing dependency: {dependency}...")  
+                print(f"Installing dependency: {dependency}...")
                 if dependency == "pip":
-                    subprocess.run([sys.executable, "-m", "ensurepip", "--upgrade"], check=True)
+                    subprocess.run(
+                        [sys.executable, "-m", "ensurepip", "--upgrade"], check=True
+                    )
                 else:
-                    subprocess.run([sys.executable, "-m", "pip", "install", dependency], check=True)
+                    subprocess.run(
+                        [sys.executable, "-m", "pip", "install", dependency], check=True
+                    )
 
             with open("dependencies_installed.flag", "w") as flag_file:
                 flag_file.write("Dependencies installed successfully.")
 
-            print("All dependencies have been installed. Proceeding with the application.") 
+            print(
+                "All dependencies have been installed. Proceeding with the application."
+            )
             messagebox.showinfo("Success", "All dependencies have been installed.")
             logging.info("Dependency check completed.")
-            return True  
+            return True
         except Exception as e:
-            print(f"Error during dependency installation: {e}")  
+            print(f"Error during dependency installation: {e}")
             messagebox.showerror("Error", f"Failed to install dependencies: {e}")
             logging.info("Dependency check completed.")
-            return False  
+            return False
     else:
-        print("User declined to install dependencies. Exiting.")  
-        messagebox.showinfo("Exiting", "Dependencies are required to run this application.")
+        print("User declined to install dependencies. Exiting.")
+        messagebox.showinfo(
+            "Exiting", "Dependencies are required to run this application."
+        )
         logging.info("Dependency check completed.")
-        return False  
+        return False
+
 
 _admin_status_cache = None
+
 
 def is_admin():
     logging.info("Checking if the script is running as an administrator.")
     global _admin_status_cache
-    if _admin_status_cache is not None: 
+    if _admin_status_cache is not None:
         logging.info(f"Admin status: {_admin_status_cache}")
         return _admin_status_cache
     try:
         _admin_status_cache = ctypes.windll.shell32.IsUserAnAdmin() != 0
-        logging.debug(f"Admin status: {_admin_status_cache}") 
+        logging.debug(f"Admin status: {_admin_status_cache}")
         logging.info(f"Admin status: {_admin_status_cache}")
         return _admin_status_cache
     except Exception as e:
@@ -173,26 +206,33 @@ def is_admin():
         logging.info(f"Admin status: {_admin_status_cache}")
         return False
 
+
 INITIALIZATION_FLAG_FILE = "app_initialized.flag"
+
 
 def relaunch_as_admin():
     logging.info("Attempting to relaunch the script with administrator privileges.")
-    if "--admin" in sys.argv:  
-        logging.error("Already running with --admin flag. Exiting to prevent infinite loop.")
-        messagebox.showerror("Error", "Failed to gain administrator privileges. Please run the application as an administrator.")
+    if "--admin" in sys.argv:
+        logging.error(
+            "Already running with --admin flag. Exiting to prevent infinite loop."
+        )
+        messagebox.showerror(
+            "Error",
+            "Failed to gain administrator privileges. Please run the application as an administrator.",
+        )
         sys.exit(1)
 
     with open(INITIALIZATION_FLAG_FILE, "w") as flag_file:
         flag_file.write("initialized")
 
-    script_path = os.path.abspath(sys.argv[0]) 
-    params = " ".join([f'"{arg}"' for arg in sys.argv[1:]]) + " --admin"  
+    script_path = os.path.abspath(sys.argv[0])
+    params = " ".join([f'"{arg}"' for arg in sys.argv[1:]]) + " --admin"
     try:
         ctypes.windll.shell32.ShellExecuteW(
             None, "runas", sys.executable, f'"{script_path}" {params}', None, 1
         )
         logging.info("Relaunched successfully. Exiting current instance.")
-        sys.exit()  
+        sys.exit()
     except Exception as e:
         logging.error(f"Failed to relaunch as admin: {e}")
         messagebox.showerror("Error", f"Failed to relaunch as admin: {e}")
@@ -200,15 +240,23 @@ def relaunch_as_admin():
 
 
 def handle_uncaught_exception(exc_type, exc_value, exc_traceback):
-    logging.critical("Handling uncaught exception.", exc_info=(exc_type, exc_value, exc_traceback))
+    logging.critical(
+        "Handling uncaught exception.", exc_info=(exc_type, exc_value, exc_traceback)
+    )
     if issubclass(exc_type, KeyboardInterrupt):
         sys.__excepthook__(exc_type, exc_value, exc_traceback)
         return
-    logging.critical("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
-    messagebox.showerror("Critical Error", f"An unexpected error occurred:\n{exc_value}")
+    logging.critical(
+        "Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback)
+    )
+    messagebox.showerror(
+        "Critical Error", f"An unexpected error occurred:\n{exc_value}"
+    )
     sys.exit(1)
 
+
 sys.excepthook = handle_uncaught_exception
+
 
 def pause_on_exit():
 
@@ -216,15 +264,20 @@ def pause_on_exit():
 
 
 if not is_admin():
-    if "--admin" not in sys.argv:  
+    if "--admin" not in sys.argv:
         logging.debug("Admin privileges not detected. Attempting to relaunch as admin.")
         relaunch_as_admin()
     else:
         logging.error("Admin privileges still not detected after relaunch. Exiting.")
-        messagebox.showerror("Error", "Failed to gain administrator privileges. Please run the application as an administrator.")
+        messagebox.showerror(
+            "Error",
+            "Failed to gain administrator privileges. Please run the application as an administrator.",
+        )
         sys.exit(1)
 else:
-    logging.info("Admin privileges detected. Proceeding with application initialization.")
+    logging.info(
+        "Admin privileges detected. Proceeding with application initialization."
+    )
 
 try:
     logging.info("Checking Python installation.")
@@ -234,7 +287,7 @@ try:
         sys.exit()
 
     logging.info("Checking dependencies.")
-    if not os.path.exists("dependencies_installed.flag"): 
+    if not os.path.exists("dependencies_installed.flag"):
         if not check_dependencies():
             logging.error("Dependency check failed. Exiting.")
             pause_on_exit()
@@ -248,34 +301,35 @@ except Exception as e:
 import tkinter as tk
 import sys
 
+
 class FirewallManagerApp:
     def __init__(self, root):
         logging.info("Initializing FirewallManagerApp.")
         self.root = root
         self.root.title("N3xG3n Firewall Manager")
-        self.root.geometry("950x1020")  
-        self.root.configure(bg="#2C3E50")  
-        self.root.resizable(True, True)  
+        self.root.geometry("950x1020")
+        self.root.configure(bg="#2C3E50")
+        self.root.resizable(True, True)
         try:
-            self.root.iconbitmap("icon.ico")  
+            self.root.iconbitmap("icon.ico")
         except Exception as e:
             print(f"Warning: Failed to set window icon. Error: {e}")
-        self.log_file = "firewall_manager.txt"  
-        self.error_log_file = "error_log.txt" 
-        self.users_file = "users.json"  
-        self.users = {"admin": "admin123"}  
-        self.session_timeout = None  
+        self.log_file = "firewall_manager.txt"
+        self.error_log_file = "error_log.txt"
+        self.users_file = "users.json"
+        self.users = {"admin": "admin123"}
+        self.session_timeout = None
         self.last_activity = time.time()
         self.color_theme = {
-            "background": "#1E1E2F",  
-            "foreground": "#FFFFFF",  
-            "button_bg": "#4CAF50", 
-            "button_fg": "#FFFFFF",  
-            "button_active_bg": "#45A049",  
-            "button_active_fg": "#FFFFFF",  
-            "entry_bg": "#2E2E3F",  
-            "entry_fg": "#FFFFFF",  
-            "frame_bg": "#2A2A3B",  
+            "background": "#1E1E2F",
+            "foreground": "#FFFFFF",
+            "button_bg": "#4CAF50",
+            "button_fg": "#FFFFFF",
+            "button_active_bg": "#45A049",
+            "button_active_fg": "#FFFFFF",
+            "entry_bg": "#2E2E3F",
+            "entry_fg": "#FFFFFF",
+            "frame_bg": "#2A2A3B",
         }
         self.fonts = {
             "header": ("Segoe UI", 20, "bold"),
@@ -283,9 +337,9 @@ class FirewallManagerApp:
             "text": ("Segoe UI", 12),
             "button": ("Segoe UI", 12, "bold"),
         }
-        self.ensure_log_files_exist()  
-        self.load_users()  
-        self.start_session_monitor()  
+        self.ensure_log_files_exist()
+        self.load_users()
+        self.start_session_monitor()
         self.create_main_menu()
         logging.info("FirewallManagerApp initialized successfully.")
 
@@ -294,45 +348,50 @@ class FirewallManagerApp:
         print("Checking for updates...")
 
         try:
-            update_url = "http://162.248.94.164/N3xG3n_Firewall_Manager/version.txt"  
+            update_url = "http://162.248.94.164/N3xG3n_Firewall_Manager/version.txt"
             response = requests.get(update_url, timeout=5)
             response.raise_for_status()
             latest_version = response.text.strip()
 
-            current_version = "1.1.4"  
-            logging.debug(f"Current version: {current_version}, Latest version: {latest_version}")
-            print(f"Current version: {current_version}, Latest version: {latest_version}")
+            current_version = "1.1.4"
+            logging.debug(
+                f"Current version: {current_version}, Latest version: {latest_version}"
+            )
+            print(
+                f"Current version: {current_version}, Latest version: {latest_version}"
+            )
 
             if self.compare_versions(latest_version, current_version):
                 logging.info("Update available.")
                 print("Update available.")
                 self.prompt_update(latest_version)
-                return True 
+                return True
             else:
                 logging.info("No updates found. The application is up-to-date.")
                 print("No updates found. The application is up-to-date.")
-                return False  
+                return False
         except requests.exceptions.RequestException as e:
             logging.error(f"Failed to check for updates: {e}")
             print(f"Failed to check for updates: {e}")
-            return False  
+            return False
 
     def compare_versions(self, latest_version, current_version):
-        
+
         from packaging import version
+
         return version.parse(latest_version) > version.parse(current_version)
 
     def prompt_update(self, latest_version):
-        
+
         confirmed = self.show_confirmation_dialog(
             "Update Available",
-            f"A new version ({latest_version}) is available. Would you like to update now?"
+            f"A new version ({latest_version}) is available. Would you like to update now?",
         )
         if confirmed:
             threading.Thread(target=self.download_and_update, daemon=True).start()
 
     def download_and_update(self):
-        
+
         try:
             update_url = "http://162.248.94.164/N3xG3n_Firewall_Manager/N3xG3n_FireWall_Manager.exe"
             temp_file = "N3xG3n_FireWall_Manager_update.exe"
@@ -351,16 +410,21 @@ class FirewallManagerApp:
 
             os.rename(temp_file, current_executable)
 
-            self.show_message_dialog("Update Complete", "The application has been updated. Please restart it.")
+            self.show_message_dialog(
+                "Update Complete",
+                "The application has been updated. Please restart it.",
+            )
             pause_on_exit()
-            sys.exit(0)  
+            sys.exit(0)
         except requests.exceptions.RequestException as e:
             logging.error(f"Failed to download update: {e}")
             self.show_message_dialog("Update Failed", f"Failed to download update: {e}")
             pause_on_exit()
         except Exception as e:
             logging.error(f"Failed to update application: {e}")
-            self.show_message_dialog("Update Failed", f"An error occurred while updating: {e}")
+            self.show_message_dialog(
+                "Update Failed", f"An error occurred while updating: {e}"
+            )
             pause_on_exit()
 
     def ensure_log_files_exist(self):
@@ -375,22 +439,24 @@ class FirewallManagerApp:
 
     def check_admin(self):
         logging.info("Checking if the application is running as an administrator.")
-        if not os.name == 'nt' or not ctypes.windll.shell32.IsUserAnAdmin():
-            self.show_messagebox("Error", "This application must be run as an administrator.", "error")
+        if not os.name == "nt" or not ctypes.windll.shell32.IsUserAnAdmin():
+            self.show_messagebox(
+                "Error", "This application must be run as an administrator.", "error"
+            )
             self.root.quit()
         logging.info("Admin check completed.")
 
     def log_action(self, action):
         logging.info(f"Logging action: {action}")
         log_entry = f"{datetime.now()} - ACTION: {action}"
-        print(log_entry)  
+        print(log_entry)
         with open(self.log_file, "a") as log:
             log.write(log_entry + "\n")
 
     def log_error(self, error):
         logging.error(f"Logging error: {error}")
         error_entry = f"{datetime.now()} - ERROR: {error}"
-        print(error_entry)  
+        print(error_entry)
         with open(self.error_log_file, "a") as error_log:
             error_log.write(error_entry + "\n")
 
@@ -415,10 +481,10 @@ class FirewallManagerApp:
                     self.log_action("Loaded user credentials from file.")
             except Exception as e:
                 self.log_error(f"Failed to load users: {e}")
-                self.users = {self.admin_username: self.admin_password} 
+                self.users = {self.admin_username: self.admin_password}
         else:
-            self.users = {self.admin_username: self.admin_password}  
-            self.save_users()  
+            self.users = {self.admin_username: self.admin_password}
+            self.save_users()
         logging.info("User credentials loaded successfully.")
 
     def save_users(self):
@@ -436,15 +502,11 @@ class FirewallManagerApp:
         dialog = tk.Toplevel(self.root)
         dialog.title(title)
         dialog.geometry("500x300")
-        dialog.resizable(True, True) 
+        dialog.resizable(True, True)
         dialog.configure(bg=self.color_theme["background"])
 
         tk.Label(
-            dialog,
-            text=message,
-            **self.label_style(),
-            wraplength=380,
-            justify="center"
+            dialog, text=message, **self.label_style(), wraplength=380, justify="center"
         ).pack(pady=20)
 
         result = {"button": None}
@@ -461,7 +523,7 @@ class FirewallManagerApp:
                 button_frame,
                 text=button_text,
                 command=lambda b=button_value: on_button_click(b),
-                **self.button_style()
+                **self.button_style(),
             ).pack(side="left", padx=10)
 
         dialog.transient(self.root)
@@ -476,24 +538,16 @@ class FirewallManagerApp:
         return self.create_custom_dialog(
             "Authentication",
             "Do you have an account?",
-            {"Yes": "yes", "No": "no", "Cancel": "cancel"}
+            {"Yes": "yes", "No": "no", "Cancel": "cancel"},
         )
 
     def show_confirmation_dialog(self, title, message):
         logging.info("Showing confirmation dialog.")
-        return self.create_custom_dialog(
-            title,
-            message,
-            {"Yes": True, "No": False}
-        )
+        return self.create_custom_dialog(title, message, {"Yes": True, "No": False})
 
     def show_message_dialog(self, title, message):
         logging.info("Showing message dialog.")
-        return self.create_custom_dialog(
-            title,
-            message,
-            {"OK": "ok"}
-        )
+        return self.create_custom_dialog(title, message, {"OK": "ok"})
 
     def show_input_dialog(self, title, prompt, is_password=False):
         logging.info("Showing input dialog.")
@@ -503,26 +557,24 @@ class FirewallManagerApp:
         dialog.configure(bg=self.color_theme["background"])
         dialog.resizable(False, False)
 
-        tk.Label(
-            dialog,
-            text=prompt,
-            **self.label_style()
-        ).pack(pady=10)
+        tk.Label(dialog, text=prompt, **self.label_style()).pack(pady=10)
 
         entry_var = tk.StringVar()
-        entry = tk.Entry(dialog, textvariable=entry_var, **self.entry_style(), show="*" if is_password else "")
+        entry = tk.Entry(
+            dialog,
+            textvariable=entry_var,
+            **self.entry_style(),
+            show="*" if is_password else "",
+        )
         entry.pack(pady=10, padx=20, fill="x")
         entry.focus()
 
         def on_submit():
             dialog.destroy()
 
-        tk.Button(
-            dialog,
-            text="Submit",
-            command=on_submit,
-            **self.button_style()
-        ).pack(pady=10)
+        tk.Button(dialog, text="Submit", command=on_submit, **self.button_style()).pack(
+            pady=10
+        )
 
         dialog.transient(self.root)
         dialog.grab_set()
@@ -556,7 +608,7 @@ class FirewallManagerApp:
             "Silver": "#C0C0C0",
             "Navy": "#000080",
             "Olive": "#808000",
-            "Maroon": "#800000"
+            "Maroon": "#800000",
         }
 
         theme_window = tk.Toplevel(self.root)
@@ -565,19 +617,18 @@ class FirewallManagerApp:
         theme_window.resizable(True, True)
         theme_window.configure(bg=self.color_theme["background"])
 
-        tk.Label(
-            theme_window,
-            text="Choose a color theme:",
-            **self.label_style()
-        ).pack(pady=10)
+        tk.Label(theme_window, text="Choose a color theme:", **self.label_style()).pack(
+            pady=10
+        )
 
-        canvas = tk.Canvas(theme_window, bg=self.color_theme["background"], highlightthickness=0)
+        canvas = tk.Canvas(
+            theme_window, bg=self.color_theme["background"], highlightthickness=0
+        )
         scrollbar = tk.Scrollbar(theme_window, orient="vertical", command=canvas.yview)
         scrollable_frame = tk.Frame(canvas, **self.frame_style())
 
         scrollable_frame.bind(
-            "<Configure>",
-            lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+            "<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
         )
         canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
         canvas.configure(yscrollcommand=scrollbar.set)
@@ -592,7 +643,7 @@ class FirewallManagerApp:
                 font=("Arial", 12),
                 bg=color_code,
                 fg="#ECF0F1" if color_code != "#FFFFFF" else "#000000",
-                command=lambda t=theme_name: self.apply_theme(t, themes, theme_window)
+                command=lambda t=theme_name: self.apply_theme(t, themes, theme_window),
             ).pack(fill="x", pady=5, padx=20)
 
         logging.info("Color theme set successfully.")
@@ -614,15 +665,24 @@ class FirewallManagerApp:
                 widget.configure(bg=self.color_theme["frame_bg"])
                 self.update_widget_colors(widget)
             elif isinstance(widget, tk.Label):
-                widget.configure(bg=self.color_theme["background"], fg=self.color_theme["foreground"])
+                widget.configure(
+                    bg=self.color_theme["background"], fg=self.color_theme["foreground"]
+                )
             elif isinstance(widget, tk.Button):
-                widget.configure(bg=self.color_theme["button_bg"], fg=self.color_theme["button_fg"],
-                                 activebackground=self.color_theme["button_active_bg"],
-                                 activeforeground=self.color_theme["button_active_fg"])
+                widget.configure(
+                    bg=self.color_theme["button_bg"],
+                    fg=self.color_theme["button_fg"],
+                    activebackground=self.color_theme["button_active_bg"],
+                    activeforeground=self.color_theme["button_active_fg"],
+                )
             elif isinstance(widget, tk.Entry):
-                widget.configure(bg=self.color_theme["entry_bg"], fg=self.color_theme["entry_fg"])
+                widget.configure(
+                    bg=self.color_theme["entry_bg"], fg=self.color_theme["entry_fg"]
+                )
             elif isinstance(widget, tk.Text):
-                widget.configure(bg=self.color_theme["entry_bg"], fg=self.color_theme["entry_fg"])
+                widget.configure(
+                    bg=self.color_theme["entry_bg"], fg=self.color_theme["entry_fg"]
+                )
             elif isinstance(widget, tk.Scrollbar):
                 widget.configure(bg=self.color_theme["frame_bg"])
 
@@ -639,13 +699,14 @@ class FirewallManagerApp:
         self.clear_window()
         self.reset_activity_timer()
 
-        canvas = tk.Canvas(self.root, bg=self.color_theme["background"], highlightthickness=0)
+        canvas = tk.Canvas(
+            self.root, bg=self.color_theme["background"], highlightthickness=0
+        )
         scrollbar = tk.Scrollbar(self.root, orient="vertical", command=canvas.yview)
         scrollable_frame = tk.Frame(canvas, bg=self.color_theme["background"])
 
         scrollable_frame.bind(
-            "<Configure>",
-            lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+            "<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
         )
         canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
         canvas.configure(yscrollcommand=scrollbar.set)
@@ -653,22 +714,31 @@ class FirewallManagerApp:
         canvas.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
 
-        header_frame = tk.Frame(scrollable_frame, bg=self.color_theme["frame_bg"], pady=20)
+        header_frame = tk.Frame(
+            scrollable_frame, bg=self.color_theme["frame_bg"], pady=20
+        )
         header_frame.pack(fill="x")
         tk.Label(
             header_frame,
             text="N3xG3n Firewall Manager",
             font=self.fonts["header"],
             fg=self.color_theme["foreground"],
-            bg=self.color_theme["frame_bg"]
+            bg=self.color_theme["frame_bg"],
         ).pack()
 
-        main_frame = tk.Frame(scrollable_frame, bg=self.color_theme["background"], padx=20, pady=20)
+        main_frame = tk.Frame(
+            scrollable_frame, bg=self.color_theme["background"], padx=20, pady=20
+        )
         main_frame.pack(fill="both", expand=True)
 
         firewall_frame = tk.LabelFrame(
-            main_frame, text="Firewall Rules", font=self.fonts["subheader"],
-            fg=self.color_theme["foreground"], bg=self.color_theme["frame_bg"], bd=2, relief="groove"
+            main_frame,
+            text="Firewall Rules",
+            font=self.fonts["subheader"],
+            fg=self.color_theme["foreground"],
+            bg=self.color_theme["frame_bg"],
+            bd=2,
+            relief="groove",
         )
         firewall_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
@@ -689,8 +759,13 @@ class FirewallManagerApp:
             ).grid(row=i // 2, column=i % 2, padx=5, pady=5, sticky="ew")
 
         settings_frame = tk.LabelFrame(
-            main_frame, text="Settings", font=self.fonts["subheader"],
-            fg=self.color_theme["foreground"], bg=self.color_theme["frame_bg"], bd=2, relief="groove"
+            main_frame,
+            text="Settings",
+            font=self.fonts["subheader"],
+            fg=self.color_theme["foreground"],
+            bg=self.color_theme["frame_bg"],
+            bd=2,
+            relief="groove",
         )
         settings_frame.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
 
@@ -711,8 +786,13 @@ class FirewallManagerApp:
             ).grid(row=i // 2, column=i % 2, padx=5, pady=5, sticky="ew")
 
         tools_frame = tk.LabelFrame(
-            main_frame, text="Tools", font=self.fonts["subheader"],
-            fg=self.color_theme["foreground"], bg=self.color_theme["frame_bg"], bd=2, relief="groove"
+            main_frame,
+            text="Tools",
+            font=self.fonts["subheader"],
+            fg=self.color_theme["foreground"],
+            bg=self.color_theme["frame_bg"],
+            bd=2,
+            relief="groove",
         )
         tools_frame.grid(row=1, column=0, columnspan=2, padx=10, pady=10, sticky="nsew")
 
@@ -726,7 +806,10 @@ class FirewallManagerApp:
             ("Malware Detection", self.malware_detection),
             ("Network Monitoring", self.network_monitoring),
             ("Optimize Rules", self.optimize_rules),
-            ("Clear Browser Cache", lambda: self.safe_execute(self.clear_browser_cache)),
+            (
+                "Clear Browser Cache",
+                lambda: self.safe_execute(self.clear_browser_cache),
+            ),
             ("Defragment Drives", lambda: self.safe_execute(self.defragment_drives)),
             ("View Logs", self.view_logs),
             ("Advanced Rule Management", self.advanced_rule_management),
@@ -745,10 +828,15 @@ class FirewallManagerApp:
                 tools_frame, text=text, command=command, **self.button_style()
             ).grid(row=i // 2, column=i % 2, padx=5, pady=5, sticky="ew")
 
-        footer_frame = tk.Frame(scrollable_frame, bg=self.color_theme["frame_bg"], pady=10)
+        footer_frame = tk.Frame(
+            scrollable_frame, bg=self.color_theme["frame_bg"], pady=10
+        )
         footer_frame.pack(fill="x")
         tk.Button(
-            footer_frame, text="Help Menu", command=self.help_menu, **self.button_style()
+            footer_frame,
+            text="Help Menu",
+            command=self.help_menu,
+            **self.button_style(),
         ).pack(side="left", padx=10)
         tk.Button(
             footer_frame, text="Exit", command=self.root.quit, **self.button_style()
@@ -766,12 +854,13 @@ class FirewallManagerApp:
         commands_window.configure(bg="#2C3E50")
 
         canvas = tk.Canvas(commands_window, bg="#2C3E50", highlightthickness=0)
-        scrollbar = tk.Scrollbar(commands_window, orient="vertical", command=canvas.yview)
+        scrollbar = tk.Scrollbar(
+            commands_window, orient="vertical", command=canvas.yview
+        )
         scrollable_frame = tk.Frame(canvas, bg="#2C3E50")
 
         scrollable_frame.bind(
-            "<Configure>",
-            lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+            "<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
         )
         canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
         canvas.configure(yscrollcommand=scrollbar.set)
@@ -784,7 +873,7 @@ class FirewallManagerApp:
             text="Helpful Windows Commands",
             font=("Segoe UI", 16, "bold"),
             fg="#ECF0F1",
-            bg="#2C3E50"
+            bg="#2C3E50",
         ).grid(row=0, column=0, columnspan=3, pady=10)
 
         commands = {
@@ -804,7 +893,7 @@ class FirewallManagerApp:
             "Display Routing Table": "route print",
             "Enable Firewall Logging": "netsh advfirewall set currentprofile logging filename log.txt",
             "Disable Firewall Logging": "netsh advfirewall set currentprofile logging disabled",
-            "Check Open Ports": "netstat -an | find \"LISTENING\"",
+            "Check Open Ports": 'netstat -an | find "LISTENING"',
             "View ARP Cache": "arp -a",
             "Clear ARP Cache": "arp -d *",
             "Check DNS Servers": "nslookup google.com",
@@ -827,7 +916,7 @@ class FirewallManagerApp:
                 bd=0,
                 padx=10,
                 pady=5,
-                cursor="hand2"
+                cursor="hand2",
             ).grid(row=row, column=col, padx=10, pady=10, sticky="ew")
             col += 1
             if col > 2:
@@ -839,7 +928,7 @@ class FirewallManagerApp:
             text="Execute Custom Command",
             font=("Segoe UI", 14, "bold"),
             fg="#ECF0F1",
-            bg="#2C3E50"
+            bg="#2C3E50",
         ).grid(row=row + 1, column=0, columnspan=3, pady=10)
 
         custom_command_var = tk.StringVar()
@@ -849,9 +938,11 @@ class FirewallManagerApp:
             font=("Segoe UI", 12),
             bg="#ECF0F1",
             fg="#2C3E50",
-            relief="flat"
+            relief="flat",
         )
-        custom_command_entry.grid(row=row + 2, column=0, columnspan=2, padx=20, pady=5, sticky="ew")
+        custom_command_entry.grid(
+            row=row + 2, column=0, columnspan=2, padx=20, pady=5, sticky="ew"
+        )
 
         tk.Button(
             scrollable_frame,
@@ -866,7 +957,7 @@ class FirewallManagerApp:
             bd=0,
             padx=10,
             pady=5,
-            cursor="hand2"
+            cursor="hand2",
         ).grid(row=row + 2, column=2, padx=20, pady=5, sticky="ew")
 
         tk.Button(
@@ -882,7 +973,7 @@ class FirewallManagerApp:
             bd=0,
             padx=10,
             pady=5,
-            cursor="hand2"
+            cursor="hand2",
         ).grid(row=row + 3, column=0, columnspan=3, pady=20)
 
     def execute_command(self, command):
@@ -907,7 +998,7 @@ class FirewallManagerApp:
             text="Command Output",
             font=("Segoe UI", 14, "bold"),
             fg="#ECF0F1",
-            bg="#2C3E50"
+            bg="#2C3E50",
         ).pack(pady=10)
 
         output_text = tk.Text(
@@ -916,7 +1007,7 @@ class FirewallManagerApp:
             bg="#2C3E50",
             fg="#ECF0F1",
             wrap="word",
-            state="normal"
+            state="normal",
         )
         output_text.insert("1.0", output)
         output_text.config(state="disabled")
@@ -968,6 +1059,7 @@ class FirewallManagerApp:
 
     def show_custom_port_dialog(self, title, fields):
         logging.info("Showing custom port dialog.")
+
         dialog = tk.Toplevel(self.root)
         dialog.title(title)
         dialog.geometry("400x300")
@@ -976,31 +1068,32 @@ class FirewallManagerApp:
 
         field_vars = {}
         for field in fields:
-            tk.Label(
-                dialog,
-                text=field,
-                **self.label_style()
-            ).pack(pady=5)
+            tk.Label(dialog, text=field, **self.label_style()).pack(pady=5)
             field_var = tk.StringVar()
-            tk.Entry(dialog, textvariable=field_var, **self.entry_style()).pack(pady=5, padx=20, fill="x")
+            tk.Entry(dialog, textvariable=field_var, **self.entry_style()).pack(
+                pady=5, padx=20, fill="x"
+            )
             field_vars[field] = field_var
 
+        result = {}
+
         def on_submit():
+            nonlocal result
+            # Capture the input values before destroying the dialog
+            result = {field: var.get().strip() for field, var in field_vars.items()}
+            logging.debug(f"Captured inputs: {result}")
             dialog.destroy()
 
-        tk.Button(
-            dialog,
-            text="Submit",
-            **self.button_style(),
-            command=on_submit
-        ).pack(pady=20)
+        tk.Button(dialog, text="Submit", **self.button_style(), command=on_submit).pack(
+            pady=20
+        )
 
         dialog.transient(self.root)
         dialog.grab_set()
         self.root.wait_window(dialog)
 
         logging.info("Custom port dialog shown successfully.")
-        return {field: var.get() for field, var in field_vars.items()}
+        return result
 
     def show_custom_confirmation(self, title, message):
         logging.info("Showing custom confirmation dialog.")
@@ -1011,11 +1104,7 @@ class FirewallManagerApp:
         dialog.resizable(False, False)
 
         tk.Label(
-            dialog,
-            text=message,
-            **self.label_style(),
-            wraplength=380,
-            justify="center"
+            dialog, text=message, **self.label_style(), wraplength=380, justify="center"
         ).pack(pady=20)
 
         result = {"confirmed": False}
@@ -1030,19 +1119,13 @@ class FirewallManagerApp:
         button_frame = tk.Frame(dialog, **self.frame_style())
         button_frame.pack(pady=10)
 
-        tk.Button(
-            button_frame,
-            text="Yes",
-            **self.button_style(),
-            command=on_yes
-        ).pack(side="left", padx=10)
+        tk.Button(button_frame, text="Yes", **self.button_style(), command=on_yes).pack(
+            side="left", padx=10
+        )
 
-        tk.Button(
-            button_frame,
-            text="No",
-            **self.button_style(),
-            command=on_no
-        ).pack(side="right", padx=10)
+        tk.Button(button_frame, text="No", **self.button_style(), command=on_no).pack(
+            side="right", padx=10
+        )
 
         dialog.transient(self.root)
         dialog.grab_set()
@@ -1066,25 +1149,44 @@ class FirewallManagerApp:
         logging.info("Ports opened successfully.")
 
     def _open_ports(self):
-        inputs = self.show_custom_port_dialog("Open Ports", ["Port Number or Range (e.g., 80 or 1000-2000)", "Protocol (TCP/UDP)"])
+        inputs = self.show_custom_port_dialog(
+            "Open Ports",
+            ["Port Number or Range (e.g., 80 or 1000-2000)", "Protocol (TCP/UDP)"],
+        )
         port = inputs.get("Port Number or Range (e.g., 80 or 1000-2000)")
         protocol = inputs.get("Protocol (TCP/UDP)").upper()
         if not port or not protocol:
             self.show_message_dialog("Error", "Port or protocol cannot be empty!")
             return
         if protocol not in ["TCP", "UDP"]:
-            self.show_message_dialog("Error", "Invalid protocol! Please enter TCP or UDP.")
+            self.show_message_dialog(
+                "Error", "Invalid protocol! Please enter TCP or UDP."
+            )
             return
         try:
             subprocess.run(
-                ["netsh", "advfirewall", "firewall", "add", "rule", f"name=Open Port {port} ({protocol})",
-                 "dir=in", "action=allow", f"protocol={protocol}", f"localport={port}"],
-                check=True
+                [
+                    "netsh",
+                    "advfirewall",
+                    "firewall",
+                    "add",
+                    "rule",
+                    f"name=Open Port {port} ({protocol})",
+                    "dir=in",
+                    "action=allow",
+                    f"protocol={protocol}",
+                    f"localport={port}",
+                ],
+                check=True,
             )
             self.log_action(f"Opened Port {port} ({protocol})")
-            self.show_message_dialog("Success", f"Port {port} ({protocol}) has been opened successfully!")
+            self.show_message_dialog(
+                "Success", f"Port {port} ({protocol}) has been opened successfully!"
+            )
         except subprocess.CalledProcessError:
-            self.show_message_dialog("Error", f"Failed to open Port {port} ({protocol}).")
+            self.show_message_dialog(
+                "Error", f"Failed to open Port {port} ({protocol})."
+            )
 
     def close_ports(self):
         logging.info("Closing ports.")
@@ -1092,25 +1194,41 @@ class FirewallManagerApp:
         logging.info("Ports closed successfully.")
 
     def _close_ports(self):
-        inputs = self.show_custom_port_dialog("Close Ports", ["Port Number", "Protocol (TCP/UDP)"])
+        inputs = self.show_custom_port_dialog(
+            "Close Ports", ["Port Number", "Protocol (TCP/UDP)"]
+        )
         port = inputs.get("Port Number")
         protocol = inputs.get("Protocol (TCP/UDP)").upper()
         if not port or not protocol:
             self.show_message_dialog("Error", "Port or protocol cannot be empty!")
             return
         if protocol not in ["TCP", "UDP"]:
-            self.show_message_dialog("Error", "Invalid protocol! Please enter TCP or UDP.")
+            self.show_message_dialog(
+                "Error", "Invalid protocol! Please enter TCP or UDP."
+            )
             return
         try:
             subprocess.run(
-                ["netsh", "advfirewall", "firewall", "delete", "rule", f"name=Open Port {port} ({protocol})",
-                 f"protocol={protocol}", f"localport={port}"],
-                check=True
+                [
+                    "netsh",
+                    "advfirewall",
+                    "firewall",
+                    "delete",
+                    "rule",
+                    f"name=Open Port {port} ({protocol})",
+                    f"protocol={protocol}",
+                    f"localport={port}",
+                ],
+                check=True,
             )
             self.log_action(f"Closed Port {port} ({protocol})")
-            self.show_message_dialog("Success", f"Port {port} ({protocol}) has been closed successfully!")
+            self.show_message_dialog(
+                "Success", f"Port {port} ({protocol}) has been closed successfully!"
+            )
         except subprocess.CalledProcessError:
-            self.show_message_dialog("Error", f"Failed to close Port {port} ({protocol}).")
+            self.show_message_dialog(
+                "Error", f"Failed to close Port {port} ({protocol})."
+            )
 
     def query_ports(self):
         logging.info("Querying ports.")
@@ -1118,13 +1236,48 @@ class FirewallManagerApp:
         logging.info("Ports queried successfully.")
 
     def _query_ports(self):
+        logging.debug("Querying ports...")
         inputs = self.show_custom_port_dialog("Query Ports", ["Port Number"])
+        logging.debug(f"Inputs received: {inputs}")
+        port = inputs.get("Port Number", "").strip()
+        logging.debug(f"Port input after stripping: '{port}'")
+
+        if not port:
+            logging.error("Port input is empty.")
+            self.show_message_dialog("Error", "Port number cannot be empty!")
+            return
+
+        if not port.isdigit():
+            logging.error(f"Port input '{port}' is not a valid number.")
+            self.show_message_dialog("Error", "Port number must be a valid number!")
+            return
+
+        port_number = int(port)
+        if not (1 <= port_number <= 65535):
+            logging.error(f"Port number {port_number} is out of valid range (1–65535).")
+            self.show_message_dialog(
+                "Error", "Port number must be between 1 and 65535!"
+            )
+            return
+
         try:
-            subprocess.run(["netsh", "advfirewall", "reset"], check=True)
-            self.log_action("Firewall reset to default settings")
-            self.show_message_dialog("Success", "Firewall has been reset to default settings.")
-        except subprocess.CalledProcessError:
-            self.show_message_dialog("Error", "Failed to reset the firewall.")
+            logging.debug(f"Running netstat to check port {port_number} status...")
+            result = subprocess.run(
+                ["netstat", "-an"], capture_output=True, text=True, check=True
+            )
+            if f":{port_number}" in result.stdout:
+                logging.debug(f"Port {port_number} is currently in use.")
+                self.show_message_dialog(
+                    "Port Status", f"Port {port_number} is currently in use."
+                )
+            else:
+                logging.debug(f"Port {port_number} is not in use.")
+                self.show_message_dialog(
+                    "Port Status", f"Port {port_number} is not in use."
+                )
+        except subprocess.CalledProcessError as e:
+            logging.error(f"Error querying port status: {e}")
+            self.show_message_dialog("Error", f"Failed to query port status: {e}")
 
     def create_scrollable_window(self, title, width=600, height=500):
         logging.info("Creating scrollable window.")
@@ -1134,13 +1287,14 @@ class FirewallManagerApp:
         window.resizable(True, True)
         window.configure(bg=self.color_theme["background"])
 
-        canvas = tk.Canvas(window, bg=self.color_theme["background"], highlightthickness=0)
+        canvas = tk.Canvas(
+            window, bg=self.color_theme["background"], highlightthickness=0
+        )
         scrollbar = tk.Scrollbar(window, orient="vertical", command=canvas.yview)
         scrollable_frame = tk.Frame(canvas, **self.frame_style())
 
         scrollable_frame.bind(
-            "<Configure>",
-            lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+            "<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
         )
         canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
         canvas.configure(yscrollcommand=scrollbar.set)
@@ -1179,51 +1333,72 @@ class FirewallManagerApp:
             "Communication Tools": [
                 {"name": "Zoom", "ports": "TCP/UDP 8801-8802"},
                 {"name": "Skype", "ports": "TCP 50000-60000, UDP 50000-60000"},
-                {"name": "Discord", "ports": "TCP 443, UDP 443, TCP 50000-60000, UDP 50000-60000"}
+                {
+                    "name": "Discord",
+                    "ports": "TCP 443, UDP 443, TCP 50000-60000, UDP 50000-60000",
+                },
             ],
             "Game Servers": [
                 {"name": "Minecraft", "ports": "TCP 25565, UDP 25565"},
                 {"name": "CS:GO", "ports": "UDP 27015-27030, UDP 27036"},
                 {"name": "ARK: Survival Evolved", "ports": "UDP 7777-7778, UDP 27015"},
                 {"name": "FiveM", "ports": "TCP 30120, UDP 30120"},
-                {"name": "Fortnite", "ports": "TCP 5222, UDP 5222, TCP 5795-5847, UDP 5795-5847"},
-                {"name": "Call of Duty: Warzone", "ports": "TCP 3074, UDP 3074, TCP 27014-27050, UDP 27014-27050"},
-                {"name": "League of Legends", "ports": "TCP 5000-5500, TCP 8393-8400, TCP 2099, TCP 5222-5223, TCP 8088"},
-                {"name": "Valorant", "ports": "UDP 7000-7500, UDP 8080, UDP 8180, UDP 10000-10099"},
-                {"name": "Apex Legends", "ports": "TCP 4000-4500, UDP 4000-4500, TCP 8080"},
-                {"name": "SPT FIKA", "ports": "TCP 443, UDP 443, TCP 8080, UDP 8080, TCP 50555, UDP 50555, TCP 6969, UDP 6969"}
+                {
+                    "name": "Fortnite",
+                    "ports": "TCP 5222, UDP 5222, TCP 5795-5847, UDP 5795-5847",
+                },
+                {
+                    "name": "Call of Duty: Warzone",
+                    "ports": "TCP 3074, UDP 3074, TCP 27014-27050, UDP 27014-27050",
+                },
+                {
+                    "name": "League of Legends",
+                    "ports": "TCP 5000-5500, TCP 8393-8400, TCP 2099, TCP 5222-5223, TCP 8088",
+                },
+                {
+                    "name": "Valorant",
+                    "ports": "UDP 7000-7500, UDP 8080, UDP 8180, UDP 10000-10099",
+                },
+                {
+                    "name": "Apex Legends",
+                    "ports": "TCP 4000-4500, UDP 4000-4500, TCP 8080",
+                },
+                {
+                    "name": "SPT FIKA",
+                    "ports": "TCP 443, UDP 443, TCP 8080, UDP 8080, TCP 50555, UDP 50555, TCP 6969, UDP 6969",
+                },
             ],
             "File Sharing": [
                 {"name": "FTP", "ports": "TCP 21"},
-                {"name": "BitTorrent", "ports": "TCP 6881-6889, UDP 6881-6889"}
+                {"name": "BitTorrent", "ports": "TCP 6881-6889, UDP 6881-6889"},
             ],
             "Development Tools": [
                 {"name": "Docker", "ports": "TCP 2375-2376"},
                 {"name": "Jenkins", "ports": "TCP 8080"},
                 {"name": "GitLab", "ports": "TCP 80, TCP 443, TCP 22"},
                 {"name": "Kubernetes", "ports": "TCP 6443"},
-                {"name": "ElasticSearch", "ports": "TCP 9200-9300"}
+                {"name": "ElasticSearch", "ports": "TCP 9200-9300"},
             ],
             "Database Servers": [
                 {"name": "MySQL", "ports": "TCP 3306"},
                 {"name": "PostgreSQL", "ports": "TCP 5432"},
                 {"name": "MongoDB", "ports": "TCP 27017"},
-                {"name": "Redis", "ports": "TCP 6379"}
+                {"name": "Redis", "ports": "TCP 6379"},
             ],
             "Web Servers": [
                 {"name": "HTTP", "ports": "TCP 80"},
-                {"name": "HTTPS", "ports": "TCP 443"}
-            ]
+                {"name": "HTTPS", "ports": "TCP 443"},
+            ],
         }
 
         def show_category(category_name):
             logging.info(f"Showing category: {category_name}")
-            category_window, category_frame = self.create_scrollable_window(f"{category_name} Presets")
+            category_window, category_frame = self.create_scrollable_window(
+                f"{category_name} Presets"
+            )
 
             tk.Label(
-                category_frame,
-                text=f"{category_name} Presets",
-                **self.label_style()
+                category_frame, text=f"{category_name} Presets", **self.label_style()
             ).pack(pady=10)
 
             for profile in profiles[category_name]:
@@ -1233,21 +1408,21 @@ class FirewallManagerApp:
                 tk.Label(
                     profile_frame,
                     text=f"{profile['name']} ({profile['ports']})",
-                    **self.label_style()
+                    **self.label_style(),
                 ).pack(side="left", padx=10)
 
                 tk.Button(
                     profile_frame,
                     text="Enable",
                     command=lambda p=profile: self.toggle_profile(p, enable=True),
-                    **self.button_style()
+                    **self.button_style(),
                 ).pack(side="left", padx=5)
 
                 tk.Button(
                     profile_frame,
                     text="Disable",
                     command=lambda p=profile: self.toggle_profile(p, enable=False),
-                    **self.button_style()
+                    **self.button_style(),
                 ).pack(side="left", padx=5)
 
             tk.Button(
@@ -1258,15 +1433,17 @@ class FirewallManagerApp:
                 fg="#ECF0F1",
                 activebackground="#2C3E50",
                 activeforeground="#ECF0F1",
-                command=category_window.destroy
+                command=category_window.destroy,
             ).pack(pady=10)
 
-        profiles_window, profiles_frame = self.create_scrollable_window("Predefined Port Profiles")
+        profiles_window, profiles_frame = self.create_scrollable_window(
+            "Predefined Port Profiles"
+        )
 
         tk.Label(
             profiles_frame,
             text="Select a category to configure ports:",
-            **self.label_style()
+            **self.label_style(),
         ).pack(pady=10)
 
         for category_name in profiles.keys():
@@ -1278,7 +1455,7 @@ class FirewallManagerApp:
                 fg="#FFFFFF",
                 activebackground="#2980B9",
                 activeforeground="#FFFFFF",
-                command=lambda c=category_name: show_category(c)
+                command=lambda c=category_name: show_category(c),
             ).pack(fill="x", pady=5, padx=20)
 
         tk.Button(
@@ -1289,7 +1466,7 @@ class FirewallManagerApp:
             fg="#ECF0F1",
             activebackground="#2C3E50",
             activeforeground="#ECF0F1",
-            command=profiles_window.destroy
+            command=profiles_window.destroy,
         ).pack(pady=10)
 
     def toggle_profile(self, profile, enable=True):
@@ -1297,14 +1474,14 @@ class FirewallManagerApp:
         action = "enable" if enable else "disable"
         confirmation = self.show_confirmation_dialog(
             f"{action.capitalize()} Profile",
-            f"Are you sure you want to {action} the profile for {profile['name']} ({profile['ports']})?"
+            f"Are you sure you want to {action} the profile for {profile['name']} ({profile['ports']})?",
         )
         if not confirmation:
             return
 
         try:
             if enable:
-                ports = profile['ports'].split(", ")
+                ports = profile["ports"].split(", ")
                 for port_entry in ports:
                     if " " not in port_entry:
                         self.log_error(f"Invalid port entry: {port_entry}. Skipping...")
@@ -1314,25 +1491,53 @@ class FirewallManagerApp:
                     for proto in protocols:
                         proto = proto.upper()
                         if proto not in ["TCP", "UDP"]:
-                            self.log_error(f"Invalid protocol: {proto}. Must be TCP or UDP. Skipping...")
+                            self.log_error(
+                                f"Invalid protocol: {proto}. Must be TCP or UDP. Skipping..."
+                            )
                             continue
                         subprocess.run(
-                            ["netsh", "advfirewall", "firewall", "add", "rule",
-                             f"name={profile['name']} ({proto} {port_range})",
-                             "dir=in", "action=allow", f"protocol={proto}", f"localport={port_range}"],
-                            check=True
+                            [
+                                "netsh",
+                                "advfirewall",
+                                "firewall",
+                                "add",
+                                "rule",
+                                f"name={profile['name']} ({proto} {port_range})",
+                                "dir=in",
+                                "action=allow",
+                                f"protocol={proto}",
+                                f"localport={port_range}",
+                            ],
+                            check=True,
                         )
-                self.log_action(f"Enabled profile: {profile['name']} ({profile['ports']})")
-                self.show_message_dialog("Success", f"Enabled profile: {profile['name']}")
+                self.log_action(
+                    f"Enabled profile: {profile['name']} ({profile['ports']})"
+                )
+                self.show_message_dialog(
+                    "Success", f"Enabled profile: {profile['name']}"
+                )
             else:
                 subprocess.run(
-                    ["netsh", "advfirewall", "firewall", "delete", "rule", f"name={profile['name']}"],
-                    check=True
+                    [
+                        "netsh",
+                        "advfirewall",
+                        "firewall",
+                        "delete",
+                        "rule",
+                        f"name={profile['name']}",
+                    ],
+                    check=True,
                 )
-                self.log_action(f"Disabled profile: {profile['name']} ({profile['ports']})")
-                self.show_message_dialog("Success", f"Disabled profile: {profile['name']}")
+                self.log_action(
+                    f"Disabled profile: {profile['name']} ({profile['ports']})"
+                )
+                self.show_message_dialog(
+                    "Success", f"Disabled profile: {profile['name']}"
+                )
         except subprocess.CalledProcessError as e:
-            self.show_message_dialog("Error", f"Failed to {action} profile: {profile['name']}. Error: {e}")
+            self.show_message_dialog(
+                "Error", f"Failed to {action} profile: {profile['name']}. Error: {e}"
+            )
 
     def backup_firewall_rules(self):
         logging.info("Backing up firewall rules.")
@@ -1340,14 +1545,20 @@ class FirewallManagerApp:
         logging.info("Firewall rules backed up successfully.")
 
     def _backup_firewall_rules(self):
-        file_path = filedialog.asksaveasfilename(defaultextension=".wfw", filetypes=[("Firewall Rules", "*.wfw")])
+        file_path = filedialog.asksaveasfilename(
+            defaultextension=".wfw", filetypes=[("Firewall Rules", "*.wfw")]
+        )
         if file_path:
             try:
-                subprocess.run(["netsh", "advfirewall", "export", file_path], check=True)
+                subprocess.run(
+                    ["netsh", "advfirewall", "export", file_path], check=True
+                )
                 self.log_action(f"Firewall rules backed up to {file_path}")
                 self.show_messagebox("Success", "Firewall rules have been backed up.")
             except subprocess.CalledProcessError:
-                self.show_messagebox("Error", "Failed to backup firewall rules.", "error")
+                self.show_messagebox(
+                    "Error", "Failed to backup firewall rules.", "error"
+                )
 
     def restore_firewall_rules(self):
         logging.info("Restoring firewall rules.")
@@ -1358,11 +1569,15 @@ class FirewallManagerApp:
         file_path = filedialog.askopenfilename(filetypes=[("Firewall Rules", "*.wfw")])
         if file_path:
             try:
-                subprocess.run(["netsh", "advfirewall", "import", file_path], check=True)
+                subprocess.run(
+                    ["netsh", "advfirewall", "import", file_path], check=True
+                )
                 self.log_action(f"Firewall rules restored from {file_path}")
                 self.show_messagebox("Success", "Firewall rules have been restored.")
             except subprocess.CalledProcessError:
-                self.show_messagebox("Error", "Failed to restore firewall rules.", "error")
+                self.show_messagebox(
+                    "Error", "Failed to restore firewall rules.", "error"
+                )
 
     def toggle_firewall(self, enable=True):
         logging.info(f"Toggling firewall. Enable: {enable}")
@@ -1373,18 +1588,24 @@ class FirewallManagerApp:
         action = "enable" if enable else "disable"
         confirmation = self.show_confirmation_dialog(
             f"{action.capitalize()} Firewall",
-            f"Are you sure you want to {action} the firewall?"
+            f"Are you sure you want to {action} the firewall?",
         )
         if not confirmation:
             return
 
         try:
             if enable:
-                subprocess.run(["netsh", "advfirewall", "set", "allprofiles", "state", "on"], check=True)
+                subprocess.run(
+                    ["netsh", "advfirewall", "set", "allprofiles", "state", "on"],
+                    check=True,
+                )
                 self.log_action("Firewall enabled")
                 self.show_message_dialog("Success", "Firewall has been enabled.")
             else:
-                subprocess.run(["netsh", "advfirewall", "set", "allprofiles", "state", "off"], check=True)
+                subprocess.run(
+                    ["netsh", "advfirewall", "set", "allprofiles", "state", "off"],
+                    check=True,
+                )
                 self.log_action("Firewall disabled")
                 self.show_message_dialog("Success", "Firewall has been disabled.")
         except subprocess.CalledProcessError:
@@ -1397,8 +1618,12 @@ class FirewallManagerApp:
 
     def _list_active_rules(self):
         try:
-            result = subprocess.run(["netsh", "advfirewall", "firewall", "show", "rule", "name=all"],
-                                    capture_output=True, text=True, check=True)
+            result = subprocess.run(
+                ["netsh", "advfirewall", "firewall", "show", "rule", "name=all"],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
             self.show_message_dialog("Active Rules", result.stdout)
         except subprocess.CalledProcessError:
             self.show_message_dialog("Error", "Failed to list active rules.")
@@ -1414,12 +1639,25 @@ class FirewallManagerApp:
             self.show_message_dialog("Error", "Rule name cannot be empty!")
             return
         try:
-            result = subprocess.run(["netsh", "advfirewall", "firewall", "show", "rule", f"name={rule_name}"],
-                                    capture_output=True, text=True, check=True)
+            result = subprocess.run(
+                [
+                    "netsh",
+                    "advfirewall",
+                    "firewall",
+                    "show",
+                    "rule",
+                    f"name={rule_name}",
+                ],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
             if result.stdout:
                 self.show_message_dialog("Rule Found", result.stdout)
             else:
-                self.show_message_dialog("Rule Not Found", f"No rule found with name: {rule_name}")
+                self.show_message_dialog(
+                    "Rule Not Found", f"No rule found with name: {rule_name}"
+                )
         except subprocess.CalledProcessError:
             self.show_message_dialog("Error", "Failed to search for the rule.")
 
@@ -1434,7 +1672,17 @@ class FirewallManagerApp:
             self.show_message_dialog("Error", "Rule name cannot be empty!")
             return
         try:
-            subprocess.run(["netsh", "advfirewall", "firewall", "delete", "rule", f"name={rule_name}"], check=True)
+            subprocess.run(
+                [
+                    "netsh",
+                    "advfirewall",
+                    "firewall",
+                    "delete",
+                    "rule",
+                    f"name={rule_name}",
+                ],
+                check=True,
+            )
             self.log_action(f"Deleted rule: {rule_name}")
             self.show_message_dialog("Success", f"Rule {rule_name} has been deleted.")
         except subprocess.CalledProcessError:
@@ -1446,7 +1694,9 @@ class FirewallManagerApp:
         logging.info("Logs exported successfully.")
 
     def _export_logs(self):
-        file_path = filedialog.asksaveasfilename(defaultextension=".log", filetypes=[("Log Files", "*.log")])
+        file_path = filedialog.asksaveasfilename(
+            defaultextension=".log", filetypes=[("Log Files", "*.log")]
+        )
         if file_path:
             try:
                 with open(self.log_file, "r") as log:
@@ -1463,8 +1713,12 @@ class FirewallManagerApp:
 
     def _view_statistics(self):
         try:
-            result = subprocess.run(["netsh", "advfirewall", "firewall", "show", "rule", "name=all"],
-                                    capture_output=True, text=True, check=True)
+            result = subprocess.run(
+                ["netsh", "advfirewall", "firewall", "show", "rule", "name=all"],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
             total_rules = result.stdout.count("Rule Name:")
             allow_rules = result.stdout.count("Action: Allow")
             block_rules = result.stdout.count("Action: Block")
@@ -1484,9 +1738,13 @@ class FirewallManagerApp:
             self.show_message_dialog("Error", "Port cannot be empty!")
             return
         try:
-            result = subprocess.run(["netstat", "-an"], capture_output=True, text=True, check=True)
+            result = subprocess.run(
+                ["netstat", "-an"], capture_output=True, text=True, check=True
+            )
             if f":{port}" in result.stdout:
-                self.show_message_dialog("Port Conflict", f"Port {port} is already in use.")
+                self.show_message_dialog(
+                    "Port Conflict", f"Port {port} is already in use."
+                )
             else:
                 self.show_message_dialog("No Conflict", f"Port {port} is available.")
         except subprocess.CalledProcessError:
@@ -1499,8 +1757,12 @@ class FirewallManagerApp:
 
     def _view_network_profile(self):
         try:
-            result = subprocess.run(["netsh", "advfirewall", "show", "currentprofile"],
-                                    capture_output=True, text=True, check=True)
+            result = subprocess.run(
+                ["netsh", "advfirewall", "show", "currentprofile"],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
             self.show_message_dialog("Network Profile", result.stdout)
         except subprocess.CalledProcessError:
             self.show_message_dialog("Error", "Failed to retrieve network profile.")
@@ -1671,7 +1933,9 @@ class FirewallManagerApp:
         If you have any questions or need further assistance, feel free to email me at jarrodz@digital-synergy.org.
         """
 
-        help_window, help_frame = self.create_scrollable_window("Help Menu", width=600, height=800)
+        help_window, help_frame = self.create_scrollable_window(
+            "Help Menu", width=600, height=800
+        )
 
         tk.Label(
             help_frame,
@@ -1680,7 +1944,7 @@ class FirewallManagerApp:
             fg="#ECF0F1",
             bg=self.color_theme["background"],
             justify="left",
-            wraplength=580
+            wraplength=580,
         ).pack(pady=10, padx=10)
 
     def start_session_monitor(self):
@@ -1688,7 +1952,9 @@ class FirewallManagerApp:
         if self.session_timeout is not None:
             if time.time() - self.last_activity > self.session_timeout:
                 logging.warning("Session timeout detected. Re-authenticating user.")
-                self.show_message_dialog("Session Timeout", "Your session has expired. Please log in again.")
+                self.show_message_dialog(
+                    "Session Timeout", "Your session has expired. Please log in again."
+                )
                 self.authenticate_user()
             else:
                 self.root.after(1000, self.start_session_monitor)
@@ -1707,7 +1973,9 @@ class FirewallManagerApp:
 
     def _update_traffic_viewer(self):
         try:
-            result = subprocess.run(["netstat", "-an"], capture_output=True, text=True, shell=True)
+            result = subprocess.run(
+                ["netstat", "-an"], capture_output=True, text=True, shell=True
+            )
             output = result.stdout if result.returncode == 0 else result.stderr
 
             filtered_lines = []
@@ -1718,7 +1986,9 @@ class FirewallManagerApp:
                         protocol = parts[0]
                         local_address = parts[1]
                         remote_address = parts[2]
-                        filtered_lines.append(f"{protocol} | Local: {local_address} | Remote: {remote_address}")
+                        filtered_lines.append(
+                            f"{protocol} | Local: {local_address} | Remote: {remote_address}"
+                        )
 
             self.traffic_viewer.config(state="normal")
             self.traffic_viewer.delete("1.0", "end")
@@ -1737,13 +2007,15 @@ class FirewallManagerApp:
     def _reset_firewall(self):
         confirmed = self.show_confirmation_dialog(
             "Reset Firewall",
-            "Are you sure you want to reset the firewall to default settings?"
+            "Are you sure you want to reset the firewall to default settings?",
         )
         if confirmed:
             try:
                 subprocess.run(["netsh", "advfirewall", "reset"], check=True)
                 self.log_action("Firewall reset to default settings.")
-                self.show_message_dialog("Success", "Firewall has been reset to default settings.")
+                self.show_message_dialog(
+                    "Success", "Firewall has been reset to default settings."
+                )
             except subprocess.CalledProcessError as e:
                 self.log_error(f"Failed to reset the firewall: {e}")
                 self.show_message_dialog("Error", "Failed to reset the firewall.")
@@ -1751,7 +2023,10 @@ class FirewallManagerApp:
     def open_admin_panel(self):
         logging.info("Opening admin panel.")
         if not getattr(self, "is_admin_user", False):
-            self.show_message_dialog("Access Denied", "You must be logged in as an admin to access the admin panel.")
+            self.show_message_dialog(
+                "Access Denied",
+                "You must be logged in as an admin to access the admin panel.",
+            )
             return
 
         admin_window = tk.Toplevel(self.root)
@@ -1764,7 +2039,7 @@ class FirewallManagerApp:
             text="Admin Panel",
             font=("Segoe UI", 16, "bold"),
             fg="#ECF0F1",
-            bg=self.color_theme["background"]
+            bg=self.color_theme["background"],
         ).pack(pady=10)
 
         admin_buttons = [
@@ -1791,7 +2066,7 @@ class FirewallManagerApp:
             admin_window,
             text="Close Admin Panel",
             command=admin_window.destroy,
-            **self.button_style()
+            **self.button_style(),
         ).pack(fill="x", pady=20, padx=20)
 
     def view_system_logs(self):
@@ -1805,14 +2080,16 @@ class FirewallManagerApp:
     def advanced_rule_management(self):
         logging.info("Managing advanced rules.")
         try:
-            management_window, management_frame = self.create_scrollable_window("Advanced Rule Management", width=800, height=600)
+            management_window, management_frame = self.create_scrollable_window(
+                "Advanced Rule Management", width=800, height=600
+            )
 
             tk.Label(
                 management_frame,
                 text="Advanced Rule Management",
                 font=("Segoe UI", 14, "bold"),
                 bg=self.color_theme["background"],
-                fg=self.color_theme["foreground"]
+                fg=self.color_theme["foreground"],
             ).pack(pady=10)
 
             tk.Label(
@@ -1820,7 +2097,7 @@ class FirewallManagerApp:
                 text="Existing Firewall Rules:",
                 font=("Segoe UI", 12, "bold"),
                 bg=self.color_theme["background"],
-                fg=self.color_theme["foreground"]
+                fg=self.color_theme["foreground"],
             ).pack(pady=5)
 
             rules_text = tk.Text(
@@ -1830,13 +2107,17 @@ class FirewallManagerApp:
                 fg=self.color_theme["entry_fg"],
                 wrap="none",
                 state="normal",
-                height=15
+                height=15,
             )
             rules_text.pack(fill="both", expand=True, padx=10, pady=10)
 
             try:
-                result = subprocess.run(["netsh", "advfirewall", "firewall", "show", "rule", "name=all"],
-                                        capture_output=True, text=True, check=True)
+                result = subprocess.run(
+                    ["netsh", "advfirewall", "firewall", "show", "rule", "name=all"],
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                )
                 rules_text.insert("1.0", result.stdout)
                 rules_text.config(state="disabled")
             except subprocess.CalledProcessError as e:
@@ -1850,31 +2131,36 @@ class FirewallManagerApp:
                 button_frame,
                 text="Add Rule",
                 command=self.add_firewall_rule,
-                **self.button_style()
+                **self.button_style(),
             ).pack(side="left", padx=10)
 
             tk.Button(
                 button_frame,
                 text="Edit Rule",
                 command=self.edit_firewall_rule,
-                **self.button_style()
+                **self.button_style(),
             ).pack(side="left", padx=10)
 
             tk.Button(
                 button_frame,
                 text="Delete Rule",
                 command=self.delete_firewall_rule,
-                **self.button_style()
+                **self.button_style(),
             ).pack(side="left", padx=10)
 
             self.log_action("Accessed advanced rule management.")
         except Exception as e:
             self.log_error(f"Failed to open advanced rule management: {e}")
-            self.show_message_dialog("Error", f"Failed to open advanced rule management: {e}")
+            self.show_message_dialog(
+                "Error", f"Failed to open advanced rule management: {e}"
+            )
 
     def add_firewall_rule(self):
         logging.info("Adding a new firewall rule.")
-        inputs = self.show_custom_port_dialog("Add Firewall Rule", ["Rule Name", "Port Number", "Protocol (TCP/UDP)", "Action (Allow/Block)"])
+        inputs = self.show_custom_port_dialog(
+            "Add Firewall Rule",
+            ["Rule Name", "Port Number", "Protocol (TCP/UDP)", "Action (Allow/Block)"],
+        )
         rule_name = inputs.get("Rule Name")
         port = inputs.get("Port Number")
         protocol = inputs.get("Protocol (TCP/UDP)").upper()
@@ -1885,41 +2171,77 @@ class FirewallManagerApp:
             return
 
         if protocol not in ["TCP", "UDP"]:
-            self.show_message_dialog("Error", "Invalid protocol! Please enter TCP or UDP.")
+            self.show_message_dialog(
+                "Error", "Invalid protocol! Please enter TCP or UDP."
+            )
             return
 
         if action not in ["allow", "block"]:
-            self.show_message_dialog("Error", "Invalid action! Please enter Allow or Block.")
+            self.show_message_dialog(
+                "Error", "Invalid action! Please enter Allow or Block."
+            )
             return
 
         try:
             subprocess.run(
-                ["netsh", "advfirewall", "firewall", "add", "rule", f"name={rule_name}",
-                 "dir=in", f"action={action}", f"protocol={protocol}", f"localport={port}"],
-                check=True
+                [
+                    "netsh",
+                    "advfirewall",
+                    "firewall",
+                    "add",
+                    "rule",
+                    f"name={rule_name}",
+                    "dir=in",
+                    f"action={action}",
+                    f"protocol={protocol}",
+                    f"localport={port}",
+                ],
+                check=True,
             )
             self.log_action(f"Added firewall rule: {rule_name}")
-            self.show_message_dialog("Success", f"Firewall rule '{rule_name}' has been added.")
+            self.show_message_dialog(
+                "Success", f"Firewall rule '{rule_name}' has been added."
+            )
         except subprocess.CalledProcessError as e:
             self.show_message_dialog("Error", f"Failed to add rule: {e}")
 
     def edit_firewall_rule(self):
         logging.info("Editing an existing firewall rule.")
-        rule_name = self.show_input_dialog("Edit Firewall Rule", "Enter the name of the rule to edit:")
+        rule_name = self.show_input_dialog(
+            "Edit Firewall Rule", "Enter the name of the rule to edit:"
+        )
         if not rule_name:
             self.show_message_dialog("Error", "Rule name cannot be empty!")
             return
 
         try:
-            result = subprocess.run(["netsh", "advfirewall", "firewall", "show", "rule", f"name={rule_name}"],
-                                    capture_output=True, text=True, check=True)
+            result = subprocess.run(
+                [
+                    "netsh",
+                    "advfirewall",
+                    "firewall",
+                    "show",
+                    "rule",
+                    f"name={rule_name}",
+                ],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
             if not result.stdout:
-                self.show_message_dialog("Error", f"No rule found with name: {rule_name}")
+                self.show_message_dialog(
+                    "Error", f"No rule found with name: {rule_name}"
+                )
                 return
 
             inputs = self.show_custom_port_dialog(
                 "Edit Firewall Rule",
-                ["New Rule Name", "Port Number", "Protocol (TCP/UDP)", "Action (Allow/Block)"]
+                [
+                    "New Rule Name",
+                    "Port Number",
+                    "Protocol (TCP/UDP)",
+                    "Action (Allow/Block)",
+                ],
             )
             new_rule_name = inputs.get("New Rule Name") or rule_name
             port = inputs.get("Port Number")
@@ -1931,37 +2253,67 @@ class FirewallManagerApp:
                 return
 
             if protocol not in ["TCP", "UDP"]:
-                self.show_message_dialog("Error", "Invalid protocol! Please enter TCP or UDP.")
+                self.show_message_dialog(
+                    "Error", "Invalid protocol! Please enter TCP or UDP."
+                )
                 return
 
             if action not in ["allow", "block"]:
-                self.show_message_dialog("Error", "Invalid action! Please enter Allow or Block.")
+                self.show_message_dialog(
+                    "Error", "Invalid action! Please enter Allow or Block."
+                )
                 return
 
-            subprocess.run(["netsh", "advfirewall", "firewall", "delete", "rule", f"name={rule_name}"], check=True)
             subprocess.run(
-                ["netsh", "advfirewall", "firewall", "add", "rule", f"name={new_rule_name}",
-                 "dir=in", f"action={action}", f"protocol={protocol}", f"localport={port}"],
-                check=True
+                [
+                    "netsh",
+                    "advfirewall",
+                    "firewall",
+                    "delete",
+                    "rule",
+                    f"name={rule_name}",
+                ],
+                check=True,
+            )
+            subprocess.run(
+                [
+                    "netsh",
+                    "advfirewall",
+                    "firewall",
+                    "add",
+                    "rule",
+                    f"name={new_rule_name}",
+                    "dir=in",
+                    f"action={action}",
+                    f"protocol={protocol}",
+                    f"localport={port}",
+                ],
+                check=True,
             )
             self.log_action(f"Edited firewall rule: {rule_name} -> {new_rule_name}")
-            self.show_message_dialog("Success", f"Firewall rule '{rule_name}' has been updated.")
+            self.show_message_dialog(
+                "Success", f"Firewall rule '{rule_name}' has been updated."
+            )
         except subprocess.CalledProcessError as e:
             self.show_message_dialog("Error", f"Failed to edit rule: {e}")
 
     def view_network_traffic(self):
         logging.info("Viewing network traffic.")
         try:
-            traffic_window, traffic_frame = self.create_scrollable_window("Network Traffic", width=600, height=400)
+            traffic_window, traffic_frame = self.create_scrollable_window(
+                "Network Traffic", width=600, height=400
+            )
             tk.Label(
                 traffic_frame,
                 text="Network Traffic",
                 font=("Segoe UI", 14, "bold"),
                 bg=self.color_theme["background"],
-                fg=self.color_theme["foreground"]
+                fg=self.color_theme["foreground"],
             ).pack(pady=10)
 
-            result = subprocess.run(["netstat", "-an"], capture_output=True, text=True, check=True)
+            result = subprocess.run(
+                ["netstat", "-an"], capture_output=True, text=True, check=True
+            )
             traffic_data = result.stdout
 
             traffic_text = tk.Text(
@@ -1971,7 +2323,7 @@ class FirewallManagerApp:
                 fg=self.color_theme["entry_fg"],
                 wrap="none",
                 state="normal",
-                height=15
+                height=15,
             )
             traffic_text.pack(fill="both", expand=True, padx=10, pady=10)
 
@@ -1988,20 +2340,29 @@ class FirewallManagerApp:
         try:
             firewall_result = subprocess.run(
                 ["netsh", "advfirewall", "firewall", "show", "rule", "name=all"],
-                capture_output=True, text=True, check=True
+                capture_output=True,
+                text=True,
+                check=True,
             )
             firewall_rules = firewall_result.stdout.splitlines()
             total_rules = len([line for line in firewall_rules if "Rule Name:" in line])
-            allow_rules = len([line for line in firewall_rules if "Action: Allow" in line])
-            block_rules = len([line for line in firewall_rules if "Action: Block" in line])
+            allow_rules = len(
+                [line for line in firewall_rules if "Action: Allow" in line]
+            )
+            block_rules = len(
+                [line for line in firewall_rules if "Action: Block" in line]
+            )
 
             traffic_result = subprocess.run(
-                ["netstat", "-an"],
-                capture_output=True, text=True, check=True
+                ["netstat", "-an"], capture_output=True, text=True, check=True
             )
             traffic_data = traffic_result.stdout.splitlines()
-            established_connections = len([line for line in traffic_data if "ESTABLISHED" in line])
-            listening_connections = len([line for line in traffic_data if "LISTENING" in line])
+            established_connections = len(
+                [line for line in traffic_data if "ESTABLISHED" in line]
+            )
+            listening_connections = len(
+                [line for line in traffic_data if "LISTENING" in line]
+            )
 
             report_data = (
                 "Security Audit Report\n\n"
@@ -2018,7 +2379,9 @@ class FirewallManagerApp:
                 "  - Monitor established connections for unusual activity.\n"
             )
 
-            report_window, report_frame = self.create_scrollable_window("Security Audit Report", width=600, height=400)
+            report_window, report_frame = self.create_scrollable_window(
+                "Security Audit Report", width=600, height=400
+            )
             report_text = tk.Text(
                 report_frame,
                 font=("Courier", 10),
@@ -2026,7 +2389,7 @@ class FirewallManagerApp:
                 fg=self.color_theme["entry_fg"],
                 wrap="word",
                 state="normal",
-                height=20
+                height=20,
             )
             report_text.pack(fill="both", expand=True, padx=10, pady=10)
             report_text.insert("1.0", report_data)
@@ -2035,7 +2398,9 @@ class FirewallManagerApp:
             self.log_action("Generated security audit report.")
         except Exception as e:
             self.log_error(f"Failed to generate security audit report: {e}")
-            self.show_message_dialog("Error", f"Failed to generate security audit report: {e}")
+            self.show_message_dialog(
+                "Error", f"Failed to generate security audit report: {e}"
+            )
 
     def backup_restore_settings(self):
         logging.info("Backing up and restoring settings.")
@@ -2059,14 +2424,16 @@ class FirewallManagerApp:
 
     def view_logs(self):
         logging.info("Viewing logs.")
-        logs_window, logs_frame = self.create_scrollable_window("View Logs", width=600, height=400)
+        logs_window, logs_frame = self.create_scrollable_window(
+            "View Logs", width=600, height=400
+        )
 
         tk.Label(
             logs_frame,
             text="Action Logs",
             font=("Segoe UI", 14, "bold"),
             fg="#ECF0F1",
-            bg=self.color_theme["background"]
+            bg=self.color_theme["background"],
         ).pack(pady=10)
 
         try:
@@ -2082,7 +2449,7 @@ class FirewallManagerApp:
             fg="#ECF0F1",
             wrap="word",
             state="normal",
-            height=10
+            height=10,
         )
         text_widget.insert("1.0", logs)
         text_widget.config(state="disabled")
@@ -2093,9 +2460,15 @@ class FirewallManagerApp:
         logging.info("Clearing browser cache.")
         try:
             browser_cache_paths = {
-                "Google Chrome": os.path.expanduser("~\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Cache"),
-                "Mozilla Firefox": os.path.expanduser("~\\AppData\\Local\\Mozilla\\Firefox\\Profiles"),
-                "Microsoft Edge": os.path.expanduser("~\\AppData\\Local\\Microsoft\\Edge\\User Data\\Default\\Cache"),
+                "Google Chrome": os.path.expanduser(
+                    "~\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Cache"
+                ),
+                "Mozilla Firefox": os.path.expanduser(
+                    "~\\AppData\\Local\\Mozilla\\Firefox\\Profiles"
+                ),
+                "Microsoft Edge": os.path.expanduser(
+                    "~\\AppData\\Local\\Microsoft\\Edge\\User Data\\Default\\Cache"
+                ),
             }
 
             for browser, path in browser_cache_paths.items():
@@ -2105,7 +2478,9 @@ class FirewallManagerApp:
                 else:
                     self.log_action(f"No cache found for {browser}.")
 
-            self.show_message_dialog("Cache Cleaner", "Browser cache cleared successfully!")
+            self.show_message_dialog(
+                "Cache Cleaner", "Browser cache cleared successfully!"
+            )
         except Exception as e:
             self.log_error(f"Failed to clear browser cache: {e}")
             self.show_message_dialog("Error", f"Failed to clear browser cache: {e}")
@@ -2114,7 +2489,11 @@ class FirewallManagerApp:
         logging.info("Defragmenting drives.")
 
         def get_available_drives():
-            drives = [f"{letter}:" for letter in string.ascii_uppercase if os.path.exists(f"{letter}:\\")]
+            drives = [
+                f"{letter}:"
+                for letter in string.ascii_uppercase
+                if os.path.exists(f"{letter}:\\")
+            ]
             return drives
 
         def run_defrag(selected_drive):
@@ -2123,11 +2502,16 @@ class FirewallManagerApp:
                     ["defrag", selected_drive, "/U", "/V"],
                     capture_output=True,
                     text=True,
-                    check=True
+                    check=True,
                 )
-                self.show_message_dialog("Defragmentation Complete", f"Drive {selected_drive}:\n{result.stdout}")
+                self.show_message_dialog(
+                    "Defragmentation Complete",
+                    f"Drive {selected_drive}:\n{result.stdout}",
+                )
             except subprocess.CalledProcessError as e:
-                self.show_message_dialog("Error", f"Failed to defragment drive {selected_drive}: {e}")
+                self.show_message_dialog(
+                    "Error", f"Failed to defragment drive {selected_drive}: {e}"
+                )
             except Exception as e:
                 self.show_message_dialog("Error", f"An unexpected error occurred: {e}")
 
@@ -2137,9 +2521,7 @@ class FirewallManagerApp:
         defrag_window.configure(bg=self.color_theme["background"])
 
         tk.Label(
-            defrag_window,
-            text="Select a drive to defragment:",
-            **self.label_style()
+            defrag_window, text="Select a drive to defragment:", **self.label_style()
         ).pack(pady=10)
 
         drives = get_available_drives()
@@ -2160,43 +2542,45 @@ class FirewallManagerApp:
             defrag_window,
             text="Start Defragmentation",
             command=start_defrag,
-            **self.button_style()
+            **self.button_style(),
         ).pack(pady=10)
 
     def manage_users(self):
         logging.info("Managing users.")
-        manage_window, manage_frame = self.create_scrollable_window("Manage Users", width=600, height=400)
+        manage_window, manage_frame = self.create_scrollable_window(
+            "Manage Users", width=600, height=400
+        )
 
         tk.Label(
             manage_frame,
             text="Manage Users",
             font=("Segoe UI", 14, "bold"),
             fg="#ECF0F1",
-            bg=self.color_theme["background"]
+            bg=self.color_theme["background"],
         ).pack(pady=10)
 
         for username in self.users.keys():
             user_frame = tk.Frame(manage_frame, **self.frame_style())
             user_frame.pack(fill="x", pady=5, padx=20)
 
-            tk.Label(
-                user_frame,
-                text=username,
-                **self.label_style()
-            ).pack(side="left", padx=10)
+            tk.Label(user_frame, text=username, **self.label_style()).pack(
+                side="left", padx=10
+            )
 
             if username != self.admin_username:
                 tk.Button(
                     user_frame,
                     text="Delete",
                     command=lambda u=username: self.delete_user(u, manage_window),
-                    **self.button_style()
+                    **self.button_style(),
                 ).pack(side="right", padx=10)
         logging.info("Users managed successfully.")
 
     def delete_user(self, username, window):
         logging.info(f"Deleting user: {username}")
-        confirmed = self.show_confirmation_dialog("Delete User", f"Are you sure you want to delete the user '{username}'?")
+        confirmed = self.show_confirmation_dialog(
+            "Delete User", f"Are you sure you want to delete the user '{username}'?"
+        )
         if confirmed:
             del self.users[username]
             self.save_users()
@@ -2214,8 +2598,12 @@ class FirewallManagerApp:
     def _optimize_rules(self):
         try:
             print("Analyzing firewall rules for optimization...")
-            result = subprocess.run(["netsh", "advfirewall", "firewall", "show", "rule", "name=all"],
-                                    capture_output=True, text=True, check=True)
+            result = subprocess.run(
+                ["netsh", "advfirewall", "firewall", "show", "rule", "name=all"],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
             rules = result.stdout.splitlines()
             duplicate_rules = {}
             for line in rules:
@@ -2226,15 +2614,19 @@ class FirewallManagerApp:
             suggestions = []
             for rule, count in duplicate_rules.items():
                 if count > 1:
-                    suggestions.append(f"Rule '{rule}' is duplicated {count} times. Consider consolidating it.")
+                    suggestions.append(
+                        f"Rule '{rule}' is duplicated {count} times. Consider consolidating it."
+                    )
 
-            optimization_window, optimization_frame = self.create_scrollable_window("Rule Optimization Suggestions", width=600, height=400)
+            optimization_window, optimization_frame = self.create_scrollable_window(
+                "Rule Optimization Suggestions", width=600, height=400
+            )
 
             if suggestions:
                 tk.Label(
                     optimization_frame,
                     text="Optimization Suggestions:",
-                    **self.label_style()
+                    **self.label_style(),
                 ).pack(pady=10)
 
                 for suggestion in suggestions:
@@ -2243,7 +2635,7 @@ class FirewallManagerApp:
                         text=suggestion,
                         **self.label_style(),
                         wraplength=580,
-                        justify="left"
+                        justify="left",
                     ).pack(anchor="w", padx=10, pady=5)
 
                 self.log_action("Rule optimization suggestions provided.")
@@ -2251,7 +2643,7 @@ class FirewallManagerApp:
                 tk.Label(
                     optimization_frame,
                     text="No optimizations needed. All rules are unique.",
-                    **self.label_style()
+                    **self.label_style(),
                 ).pack(pady=10)
                 self.log_action("No rule optimizations needed.")
         except subprocess.CalledProcessError as e:
@@ -2269,12 +2661,18 @@ class FirewallManagerApp:
     def _monitor_resources(self):
         try:
             print("Monitoring system resources...")
-            resource_window, resource_frame = self.create_scrollable_window("Resource Monitoring", width=400, height=300)
+            resource_window, resource_frame = self.create_scrollable_window(
+                "Resource Monitoring", width=400, height=300
+            )
 
-            cpu_label = tk.Label(resource_frame, text="CPU Usage: ", **self.label_style())
+            cpu_label = tk.Label(
+                resource_frame, text="CPU Usage: ", **self.label_style()
+            )
             cpu_label.pack(pady=10)
 
-            memory_label = tk.Label(resource_frame, text="Memory Usage: ", **self.label_style())
+            memory_label = tk.Label(
+                resource_frame, text="Memory Usage: ", **self.label_style()
+            )
             memory_label.pack(pady=10)
 
             def update_resources():
@@ -2288,7 +2686,9 @@ class FirewallManagerApp:
                     resource_window.after(1000, update_resources)
                 except Exception as e:
                     self.log_error(f"Error updating resource usage: {e}")
-                    self.show_message_dialog("Error", f"Failed to update resource usage: {e}")
+                    self.show_message_dialog(
+                        "Error", f"Failed to update resource usage: {e}"
+                    )
 
             update_resources()
         except Exception as e:
@@ -2301,31 +2701,40 @@ class FirewallManagerApp:
         logging.info("Ping and Traceroute completed.")
 
     def _ping_and_traceroute(self):
-        diagnostics_window, diagnostics_frame = self.create_scrollable_window("Ping and Traceroute", width=600, height=400)
+        diagnostics_window, diagnostics_frame = self.create_scrollable_window(
+            "Ping and Traceroute", width=600, height=400
+        )
 
         tk.Label(
-            diagnostics_frame,
-            text="Network Diagnostics",
-            **self.label_style()
+            diagnostics_frame, text="Network Diagnostics", **self.label_style()
         ).pack(pady=10)
 
         tk.Label(
             diagnostics_frame,
             text="Enter Hostname or IP Address:",
-            **self.label_style()
+            **self.label_style(),
         ).pack(pady=5)
 
         host_var = tk.StringVar()
-        host_entry = tk.Entry(diagnostics_frame, textvariable=host_var, **self.entry_style())
+        host_entry = tk.Entry(
+            diagnostics_frame, textvariable=host_var, **self.entry_style()
+        )
         host_entry.pack(pady=5, padx=20, fill="x")
 
         def run_ping():
             host = host_var.get()
             if not host:
-                self.show_message_dialog("Error", "Hostname or IP Address cannot be empty!")
+                self.show_message_dialog(
+                    "Error", "Hostname or IP Address cannot be empty!"
+                )
                 return
             try:
-                result = subprocess.run(["ping", "-n", "4", host], capture_output=True, text=True, check=True)
+                result = subprocess.run(
+                    ["ping", "-n", "4", host],
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                )
                 self.show_message_dialog("Ping Results", result.stdout)
             except subprocess.CalledProcessError as e:
                 self.show_message_dialog("Error", f"Ping failed: {e}")
@@ -2333,26 +2742,27 @@ class FirewallManagerApp:
         def run_traceroute():
             host = host_var.get()
             if not host:
-                self.show_message_dialog("Error", "Hostname or IP Address cannot be empty!")
+                self.show_message_dialog(
+                    "Error", "Hostname or IP Address cannot be empty!"
+                )
                 return
             try:
-                result = subprocess.run(["tracert", host], capture_output=True, text=True, check=True)
+                result = subprocess.run(
+                    ["tracert", host], capture_output=True, text=True, check=True
+                )
                 self.show_message_dialog("Traceroute Results", result.stdout)
             except subprocess.CalledProcessError as e:
                 self.show_message_dialog("Error", f"Traceroute failed: {e}")
 
         tk.Button(
-            diagnostics_frame,
-            text="Run Ping",
-            command=run_ping,
-            **self.button_style()
+            diagnostics_frame, text="Run Ping", command=run_ping, **self.button_style()
         ).pack(pady=5)
 
         tk.Button(
             diagnostics_frame,
             text="Run Traceroute",
             command=run_traceroute,
-            **self.button_style()
+            **self.button_style(),
         ).pack(pady=5)
 
     def firewall_rule_simulator(self):
@@ -2361,26 +2771,30 @@ class FirewallManagerApp:
         logging.info("Firewall rule simulation completed.")
 
     def _firewall_rule_simulator(self):
-        simulator_window, simulator_frame = self.create_scrollable_window("Firewall Rule Simulator", width=600, height=400)
+        simulator_window, simulator_frame = self.create_scrollable_window(
+            "Firewall Rule Simulator", width=600, height=400
+        )
 
         tk.Label(
-            simulator_frame,
-            text="Firewall Rule Simulator",
-            **self.label_style()
+            simulator_frame, text="Firewall Rule Simulator", **self.label_style()
         ).pack(pady=10)
 
         tk.Label(
-            simulator_frame,
-            text="Enter Rule Details:",
-            **self.label_style()
+            simulator_frame, text="Enter Rule Details:", **self.label_style()
         ).pack(pady=5)
 
-        fields = ["Port Number or Range (e.g., 80 or 1000-2000)", "Protocol (TCP/UDP)", "Action (Allow/Block)"]
+        fields = [
+            "Port Number or Range (e.g., 80 or 1000-2000)",
+            "Protocol (TCP/UDP)",
+            "Action (Allow/Block)",
+        ]
         field_vars = {field: tk.StringVar() for field in fields}
 
         for field, var in field_vars.items():
             tk.Label(simulator_frame, text=field, **self.label_style()).pack(pady=5)
-            tk.Entry(simulator_frame, textvariable=var, **self.entry_style()).pack(pady=5, padx=20, fill="x")
+            tk.Entry(simulator_frame, textvariable=var, **self.entry_style()).pack(
+                pady=5, padx=20, fill="x"
+            )
 
         def simulate_rule():
             port = field_vars["Port Number or Range (e.g., 80 or 1000-2000)"].get()
@@ -2392,24 +2806,28 @@ class FirewallManagerApp:
                 return
 
             if protocol not in ["TCP", "UDP"]:
-                self.show_message_dialog("Error", "Invalid protocol! Please enter TCP or UDP.")
+                self.show_message_dialog(
+                    "Error", "Invalid protocol! Please enter TCP or UDP."
+                )
                 return
 
             if action not in ["allow", "block"]:
-                self.show_message_dialog("Error", "Invalid action! Please enter Allow or Block.")
+                self.show_message_dialog(
+                    "Error", "Invalid action! Please enter Allow or Block."
+                )
                 return
 
             self.show_message_dialog(
                 "Simulation Results",
                 f"Simulated Rule:\nPort: {port}\nProtocol: {protocol}\nAction: {action.capitalize()}\n"
-                "This rule would be applied successfully."
+                "This rule would be applied successfully.",
             )
 
         tk.Button(
             simulator_frame,
             text="Simulate Rule",
             command=simulate_rule,
-            **self.button_style()
+            **self.button_style(),
         ).pack(pady=10)
 
     def geo_ip_blocking(self):
@@ -2418,22 +2836,22 @@ class FirewallManagerApp:
         logging.info("Geo-IP blocking simulation completed.")
 
     def _geo_ip_blocking(self):
-        geo_window, geo_frame = self.create_scrollable_window("Geo-IP Blocking", width=600, height=400)
+        geo_window, geo_frame = self.create_scrollable_window(
+            "Geo-IP Blocking", width=600, height=400
+        )
 
-        tk.Label(
-            geo_frame,
-            text="Geo-IP Blocking",
-            **self.label_style()
-        ).pack(pady=10)
+        tk.Label(geo_frame, text="Geo-IP Blocking", **self.label_style()).pack(pady=10)
 
         tk.Label(
             geo_frame,
             text="Enter Country Codes (comma-separated, e.g., US, CN, RU):",
-            **self.label_style()
+            **self.label_style(),
         ).pack(pady=5)
 
         country_var = tk.StringVar()
-        country_entry = tk.Entry(geo_frame, textvariable=country_var, **self.entry_style())
+        country_entry = tk.Entry(
+            geo_frame, textvariable=country_var, **self.entry_style()
+        )
         country_entry.pack(pady=5, padx=20, fill="x")
 
         def block_countries():
@@ -2445,15 +2863,17 @@ class FirewallManagerApp:
             country_list = [code.strip().upper() for code in countries.split(",")]
             self.show_message_dialog(
                 "Geo-IP Blocking",
-                f"Traffic from the following countries would be blocked:\n{', '.join(country_list)}"
+                f"Traffic from the following countries would be blocked:\n{', '.join(country_list)}",
             )
-            self.log_action(f"Geo-IP Blocking simulated for countries: {', '.join(country_list)}")
+            self.log_action(
+                f"Geo-IP Blocking simulated for countries: {', '.join(country_list)}"
+            )
 
         tk.Button(
             geo_frame,
             text="Simulate Geo-IP Blocking",
             command=block_countries,
-            **self.button_style()
+            **self.button_style(),
         ).pack(pady=10)
 
     def generate_reports(self):
@@ -2462,19 +2882,17 @@ class FirewallManagerApp:
         logging.info("Reports generated successfully.")
 
     def _generate_reports(self):
-        report_window, report_frame = self.create_scrollable_window("Generate Reports", width=600, height=400)
+        report_window, report_frame = self.create_scrollable_window(
+            "Generate Reports", width=600, height=400
+        )
 
-        tk.Label(
-            report_frame,
-            text="Generate Reports",
-            **self.label_style()
-        ).pack(pady=10)
+        tk.Label(report_frame, text="Generate Reports", **self.label_style()).pack(
+            pady=10
+        )
 
-        tk.Label(
-            report_frame,
-            text="Select Report Type:",
-            **self.label_style()
-        ).pack(pady=5)
+        tk.Label(report_frame, text="Select Report Type:", **self.label_style()).pack(
+            pady=5
+        )
 
         report_types = ["Firewall Activity", "Rule Usage", "Network Traffic"]
         report_var = tk.StringVar(value=report_types[0])
@@ -2487,7 +2905,7 @@ class FirewallManagerApp:
                 value=report_type,
                 **self.label_style(),
                 bg=self.color_theme["background"],
-                selectcolor=self.color_theme["frame_bg"]
+                selectcolor=self.color_theme["frame_bg"],
             ).pack(anchor="w", padx=20)
 
         def generate_report():
@@ -2503,14 +2921,18 @@ class FirewallManagerApp:
             report_frame,
             text="Generate Report",
             command=generate_report,
-            **self.button_style()
+            **self.button_style(),
         ).pack(pady=10)
 
     def _generate_firewall_activity_report(self):
         logging.info("Generating firewall activity report.")
         try:
-            result = subprocess.run(["netsh", "advfirewall", "firewall", "show", "rule", "name=all"],
-                                    capture_output=True, text=True, check=True)
+            result = subprocess.run(
+                ["netsh", "advfirewall", "firewall", "show", "rule", "name=all"],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
             rules = result.stdout.splitlines()
             total_rules = len([line for line in rules if "Rule Name:" in line])
             allow_rules = len([line for line in rules if "Action: Allow" in line])
@@ -2518,44 +2940,62 @@ class FirewallManagerApp:
 
             data = {
                 "Category": ["Total Rules", "Allow Rules", "Block Rules"],
-                "Count": [total_rules, allow_rules, block_rules]
+                "Count": [total_rules, allow_rules, block_rules],
             }
             self._visualize_data(data, "Firewall Activity Report")
         except subprocess.CalledProcessError as e:
-            self.show_message_dialog("Error", f"Failed to generate firewall activity report: {e}")
+            self.show_message_dialog(
+                "Error", f"Failed to generate firewall activity report: {e}"
+            )
 
     def _generate_rule_usage_report(self):
         logging.info("Generating rule usage report.")
         try:
-            result = subprocess.run(["netsh", "advfirewall", "firewall", "show", "rule", "name=all"],
-                                    capture_output=True, text=True, check=True)
+            result = subprocess.run(
+                ["netsh", "advfirewall", "firewall", "show", "rule", "name=all"],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
             rules = result.stdout.splitlines()
-            rule_names = [line.split(":", 1)[1].strip() for line in rules if "Rule Name:" in line]
+            rule_names = [
+                line.split(":", 1)[1].strip() for line in rules if "Rule Name:" in line
+            ]
             rule_counts = {rule: rule_names.count(rule) for rule in set(rule_names)}
 
             data = {
                 "Rule Name": list(rule_counts.keys()),
-                "Usage Count": list(rule_counts.values())
+                "Usage Count": list(rule_counts.values()),
             }
             self._visualize_data(data, "Rule Usage Report", chart_type="bar")
         except subprocess.CalledProcessError as e:
-            self.show_message_dialog("Error", f"Failed to generate rule usage report: {e}")
+            self.show_message_dialog(
+                "Error", f"Failed to generate rule usage report: {e}"
+            )
 
     def _generate_network_traffic_report(self):
         logging.info("Generating network traffic report.")
         try:
-            result = subprocess.run(["netstat", "-an"], capture_output=True, text=True, check=True)
-            connections = [line for line in result.stdout.splitlines() if "ESTABLISHED" in line]
+            result = subprocess.run(
+                ["netstat", "-an"], capture_output=True, text=True, check=True
+            )
+            connections = [
+                line for line in result.stdout.splitlines() if "ESTABLISHED" in line
+            ]
             protocols = [line.split()[0] for line in connections]
-            protocol_counts = {protocol: protocols.count(protocol) for protocol in set(protocols)}
+            protocol_counts = {
+                protocol: protocols.count(protocol) for protocol in set(protocols)
+            }
 
             data = {
                 "Protocol": list(protocol_counts.keys()),
-                "Connection Count": list(protocol_counts.values())
+                "Connection Count": list(protocol_counts.values()),
             }
             self._visualize_data(data, "Network Traffic Report", chart_type="pie")
         except subprocess.CalledProcessError as e:
-            self.show_message_dialog("Error", f"Failed to generate network traffic report: {e}")
+            self.show_message_dialog(
+                "Error", f"Failed to generate network traffic report: {e}"
+            )
 
     def _visualize_data(self, data, title, chart_type="bar"):
         logging.info(f"Visualizing data: {title}")
@@ -2564,9 +3004,13 @@ class FirewallManagerApp:
             fig, ax = plt.subplots(figsize=(8, 6))
 
             if chart_type == "bar":
-                df.plot(kind="bar", x=df.columns[0], y=df.columns[1], ax=ax, legend=False)
+                df.plot(
+                    kind="bar", x=df.columns[0], y=df.columns[1], ax=ax, legend=False
+                )
             elif chart_type == "pie":
-                df.set_index(df.columns[0]).plot(kind="pie", y=df.columns[1], ax=ax, legend=False, autopct="%1.1f%%")
+                df.set_index(df.columns[0]).plot(
+                    kind="pie", y=df.columns[1], ax=ax, legend=False, autopct="%1.1f%%"
+                )
 
             ax.set_title(title)
             ax.set_ylabel("")
@@ -2598,19 +3042,17 @@ class FirewallManagerApp:
         logging.info("Reports exported successfully.")
 
     def _export_reports(self):
-        export_window, export_frame = self.create_scrollable_window("Export Reports", width=600, height=400)
+        export_window, export_frame = self.create_scrollable_window(
+            "Export Reports", width=600, height=400
+        )
 
-        tk.Label(
-            export_frame,
-            text="Export Reports",
-            **self.label_style()
-        ).pack(pady=10)
+        tk.Label(export_frame, text="Export Reports", **self.label_style()).pack(
+            pady=10
+        )
 
-        tk.Label(
-            export_frame,
-            text="Select Export Format:",
-            **self.label_style()
-        ).pack(pady=5)
+        tk.Label(export_frame, text="Select Export Format:", **self.label_style()).pack(
+            pady=5
+        )
 
         formats = ["CSV", "Excel"]
         format_var = tk.StringVar(value=formats[0])
@@ -2623,14 +3065,16 @@ class FirewallManagerApp:
                 value=fmt,
                 **self.label_style(),
                 bg=self.color_theme["background"],
-                selectcolor=self.color_theme["frame_bg"]
+                selectcolor=self.color_theme["frame_bg"],
             ).pack(anchor="w", padx=20)
 
         def export_report():
             selected_format = format_var.get()
             file_path = filedialog.asksaveasfilename(
                 defaultextension=f".{selected_format.lower()}",
-                filetypes=[(f"{selected_format} Files", f"*.{selected_format.lower()}")]
+                filetypes=[
+                    (f"{selected_format} Files", f"*.{selected_format.lower()}")
+                ],
             )
             if not file_path:
                 return
@@ -2638,7 +3082,7 @@ class FirewallManagerApp:
             try:
                 data = {
                     "Category": ["Example 1", "Example 2", "Example 3"],
-                    "Value": [10, 20, 30]
+                    "Value": [10, 20, 30],
                 }
                 df = pd.DataFrame(data)
 
@@ -2647,7 +3091,9 @@ class FirewallManagerApp:
                 elif selected_format == "Excel":
                     df.to_excel(file_path, index=False, engine="openpyxl")
 
-                self.show_message_dialog("Success", f"Report exported successfully to {file_path}.")
+                self.show_message_dialog(
+                    "Success", f"Report exported successfully to {file_path}."
+                )
             except Exception as e:
                 self.show_message_dialog("Error", f"Failed to export report: {e}")
 
@@ -2655,7 +3101,7 @@ class FirewallManagerApp:
             export_frame,
             text="Export Report",
             command=export_report,
-            **self.button_style()
+            **self.button_style(),
         ).pack(pady=10)
 
     def port_scanning(self):
@@ -2664,22 +3110,22 @@ class FirewallManagerApp:
         logging.info("Port scanning completed.")
 
     def _port_scanning(self):
-        scan_window, scan_frame = self.create_scrollable_window("Port Scanning", width=600, height=400)
+        scan_window, scan_frame = self.create_scrollable_window(
+            "Port Scanning", width=600, height=400
+        )
 
-        tk.Label(
-            scan_frame,
-            text="Port Scanning",
-            **self.label_style()
-        ).pack(pady=10)
+        tk.Label(scan_frame, text="Port Scanning", **self.label_style()).pack(pady=10)
 
         tk.Label(
             scan_frame,
             text="Enter Target IP Address or Hostname:",
-            **self.label_style()
+            **self.label_style(),
         ).pack(pady=5)
 
         target_var = tk.StringVar()
-        target_entry = tk.Entry(scan_frame, textvariable=target_var, **self.entry_style())
+        target_entry = tk.Entry(
+            scan_frame, textvariable=target_var, **self.entry_style()
+        )
         target_entry.pack(pady=5, padx=20, fill="x")
 
         def scan_ports():
@@ -2689,16 +3135,15 @@ class FirewallManagerApp:
                 return
 
             try:
-                result = subprocess.run(["nmap", "-p-", target], capture_output=True, text=True, check=True)
+                result = subprocess.run(
+                    ["nmap", "-p-", target], capture_output=True, text=True, check=True
+                )
                 self.show_message_dialog("Scan Results", result.stdout)
             except subprocess.CalledProcessError as e:
                 self.show_message_dialog("Error", f"Port scanning failed: {e}")
 
         tk.Button(
-            scan_frame,
-            text="Scan Ports",
-            command=scan_ports,
-            **self.button_style()
+            scan_frame, text="Scan Ports", command=scan_ports, **self.button_style()
         ).pack(pady=10)
 
     def validate_firewall_rule(self, rule_name, protocol, port):
@@ -2708,21 +3153,40 @@ class FirewallManagerApp:
 
     def _validate_firewall_rule(self, rule_name, protocol, port):
         try:
-            result = subprocess.run(["netsh", "advfirewall", "firewall", "show", "rule", f"name={rule_name}"],
-                                    capture_output=True, text=True, check=True)
+            result = subprocess.run(
+                [
+                    "netsh",
+                    "advfirewall",
+                    "firewall",
+                    "show",
+                    "rule",
+                    f"name={rule_name}",
+                ],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
             if result.stdout:
-                self.show_message_dialog("Validation Error", f"Rule '{rule_name}' already exists.")
+                self.show_message_dialog(
+                    "Validation Error", f"Rule '{rule_name}' already exists."
+                )
                 return False
 
             if protocol not in ["TCP", "UDP"]:
-                self.show_message_dialog("Validation Error", "Invalid protocol! Must be TCP or UDP.")
+                self.show_message_dialog(
+                    "Validation Error", "Invalid protocol! Must be TCP or UDP."
+                )
                 return False
 
             if not port.isdigit() or not (1 <= int(port) <= 65535):
-                self.show_message_dialog("Validation Error", "Invalid port! Must be between 1 and 65535.")
+                self.show_message_dialog(
+                    "Validation Error", "Invalid port! Must be between 1 and 65535."
+                )
                 return False
 
-            self.show_message_dialog("Validation Success", "The rule is valid and can be applied.")
+            self.show_message_dialog(
+                "Validation Success", "The rule is valid and can be applied."
+            )
             return True
         except subprocess.CalledProcessError as e:
             self.show_message_dialog("Error", f"Failed to validate rule: {e}")
@@ -2734,22 +3198,22 @@ class FirewallManagerApp:
         logging.info("Malware detection completed.")
 
     def _malware_detection(self):
-        detection_window, detection_frame = self.create_scrollable_window("Malware Detection", width=600, height=400)
+        detection_window, detection_frame = self.create_scrollable_window(
+            "Malware Detection", width=600, height=400
+        )
+
+        tk.Label(detection_frame, text="Malware Detection", **self.label_style()).pack(
+            pady=10
+        )
 
         tk.Label(
-            detection_frame,
-            text="Malware Detection",
-            **self.label_style()
-        ).pack(pady=10)
-
-        tk.Label(
-            detection_frame,
-            text="Enter File Path to Scan:",
-            **self.label_style()
+            detection_frame, text="Enter File Path to Scan:", **self.label_style()
         ).pack(pady=5)
 
         file_var = tk.StringVar()
-        file_entry = tk.Entry(detection_frame, textvariable=file_var, **self.entry_style())
+        file_entry = tk.Entry(
+            detection_frame, textvariable=file_var, **self.entry_style()
+        )
         file_entry.pack(pady=5, padx=20, fill="x")
 
         def scan_file():
@@ -2762,17 +3226,18 @@ class FirewallManagerApp:
                 with open(file_path, "r", errors="ignore") as file:
                     content = file.read()
                     if "malware_signature" in content:
-                        self.show_message_dialog("Malware Detected", f"Malware detected in file: {file_path}")
+                        self.show_message_dialog(
+                            "Malware Detected", f"Malware detected in file: {file_path}"
+                        )
                     else:
-                        self.show_message_dialog("No Malware", f"No malware detected in file: {file_path}")
+                        self.show_message_dialog(
+                            "No Malware", f"No malware detected in file: {file_path}"
+                        )
             except Exception as e:
                 self.show_message_dialog("Error", f"Failed to scan file: {e}")
 
         tk.Button(
-            detection_frame,
-            text="Scan File",
-            command=scan_file,
-            **self.button_style()
+            detection_frame, text="Scan File", command=scan_file, **self.button_style()
         ).pack(pady=10)
 
     def custom_themes(self):
@@ -2781,33 +3246,42 @@ class FirewallManagerApp:
         logging.info("Custom themes saved successfully.")
 
     def _custom_themes(self):
-        theme_window, theme_frame = self.create_scrollable_window("Custom Themes", width=600, height=400)
+        theme_window, theme_frame = self.create_scrollable_window(
+            "Custom Themes", width=600, height=400
+        )
 
-        tk.Label(
-            theme_frame,
-            text="Custom Themes",
-            **self.label_style()
-        ).pack(pady=10)
+        tk.Label(theme_frame, text="Custom Themes", **self.label_style()).pack(pady=10)
 
-        fields = ["Background Color", "Foreground Color", "Button Background", "Button Foreground"]
-        field_vars = {field: tk.StringVar(value=self.color_theme.get(field.lower().replace(" ", "_"), "")) for field in fields}
+        fields = [
+            "Background Color",
+            "Foreground Color",
+            "Button Background",
+            "Button Foreground",
+        ]
+        field_vars = {
+            field: tk.StringVar(
+                value=self.color_theme.get(field.lower().replace(" ", "_"), "")
+            )
+            for field in fields
+        }
 
         for field, var in field_vars.items():
             tk.Label(theme_frame, text=field, **self.label_style()).pack(pady=5)
-            tk.Entry(theme_frame, textvariable=var, **self.entry_style()).pack(pady=5, padx=20, fill="x")
+            tk.Entry(theme_frame, textvariable=var, **self.entry_style()).pack(
+                pady=5, padx=20, fill="x"
+            )
 
         def save_theme():
             for field, var in field_vars.items():
                 self.color_theme[field.lower().replace(" ", "_")] = var.get()
             self.update_widget_colors(self.root)
             self.log_action("Custom theme applied and saved.")
-            self.show_message_dialog("Success", "Custom theme has been applied and saved.")
+            self.show_message_dialog(
+                "Success", "Custom theme has been applied and saved."
+            )
 
         tk.Button(
-            theme_frame,
-            text="Save Theme",
-            command=save_theme,
-            **self.button_style()
+            theme_frame, text="Save Theme", command=save_theme, **self.button_style()
         ).pack(pady=10)
 
     def language_support(self):
@@ -2816,15 +3290,21 @@ class FirewallManagerApp:
         logging.info("Language support applied successfully.")
 
     def _language_support(self):
-        language_window, language_frame = self.create_scrollable_window("Language Support", width=400, height=300)
+        language_window, language_frame = self.create_scrollable_window(
+            "Language Support", width=400, height=300
+        )
 
-        tk.Label(
-            language_frame,
-            text="Select Language",
-            **self.label_style()
-        ).pack(pady=10)
+        tk.Label(language_frame, text="Select Language", **self.label_style()).pack(
+            pady=10
+        )
 
-        languages = {"English": "en", "Spanish": "es", "French": "fr", "German": "de", "Chinese": "zh"}
+        languages = {
+            "English": "en",
+            "Spanish": "es",
+            "French": "fr",
+            "German": "de",
+            "Chinese": "zh",
+        }
         language_var = tk.StringVar(value="en")
 
         for lang_name, lang_code in languages.items():
@@ -2834,20 +3314,22 @@ class FirewallManagerApp:
                 variable=language_var,
                 value=lang_code,
                 **self.label_style(),
-                selectcolor=self.color_theme["frame_bg"]
+                selectcolor=self.color_theme["frame_bg"],
             ).pack(anchor="w", padx=20)
 
         def apply_language():
             selected_language = language_var.get()
             self.current_language = selected_language
             self.log_action(f"Language set to {selected_language}.")
-            self.show_message_dialog("Success", f"Language has been set to {selected_language}.")
+            self.show_message_dialog(
+                "Success", f"Language has been set to {selected_language}."
+            )
 
         tk.Button(
             language_frame,
             text="Apply Language",
             command=apply_language,
-            **self.button_style()
+            **self.button_style(),
         ).pack(pady=10)
 
     def customizable_dashboard(self):
@@ -2856,12 +3338,12 @@ class FirewallManagerApp:
         logging.info("Dashboard customization completed.")
 
     def _customizable_dashboard(self):
-        dashboard_window, dashboard_frame = self.create_scrollable_window("Customizable Dashboard", width=600, height=400)
+        dashboard_window, dashboard_frame = self.create_scrollable_window(
+            "Customizable Dashboard", width=600, height=400
+        )
 
         tk.Label(
-            dashboard_frame,
-            text="Customizable Dashboard",
-            **self.label_style()
+            dashboard_frame, text="Customizable Dashboard", **self.label_style()
         ).pack(pady=10)
 
         sections = ["Firewall Rules", "Settings", "Live Network Traffic"]
@@ -2873,20 +3355,24 @@ class FirewallManagerApp:
                 text=section,
                 variable=var,
                 **self.label_style(),
-                selectcolor=self.color_theme["frame_bg"]
+                selectcolor=self.color_theme["frame_bg"],
             ).pack(anchor="w", padx=20)
 
         def apply_dashboard_changes():
-            self.dashboard_config = {section: var.get() for section, var in section_vars.items()}
+            self.dashboard_config = {
+                section: var.get() for section, var in section_vars.items()
+            }
             self.log_action("Dashboard configuration updated.")
-            self.show_message_dialog("Success", "Dashboard configuration has been updated.")
+            self.show_message_dialog(
+                "Success", "Dashboard configuration has been updated."
+            )
             self.create_main_menu()
 
         tk.Button(
             dashboard_frame,
             text="Apply Changes",
             command=apply_dashboard_changes,
-            **self.button_style()
+            **self.button_style(),
         ).pack(pady=10)
 
     def network_monitoring(self):
@@ -2895,18 +3381,16 @@ class FirewallManagerApp:
         logging.info("Network monitoring completed.")
 
     def _network_monitoring(self):
-        monitoring_window, monitoring_frame = self.create_scrollable_window("Network Monitoring", width=800, height=600)
+        monitoring_window, monitoring_frame = self.create_scrollable_window(
+            "Network Monitoring", width=800, height=600
+        )
 
         tk.Label(
-            monitoring_frame,
-            text="Network Monitoring",
-            **self.label_style()
+            monitoring_frame, text="Network Monitoring", **self.label_style()
         ).pack(pady=10)
 
         tk.Label(
-            monitoring_frame,
-            text="Real-Time Traffic Analysis",
-            **self.label_style()
+            monitoring_frame, text="Real-Time Traffic Analysis", **self.label_style()
         ).pack(pady=5)
 
         traffic_text = tk.Text(
@@ -2916,13 +3400,15 @@ class FirewallManagerApp:
             fg="#ECF0F1",
             wrap="none",
             state="disabled",
-            height=20
+            height=20,
         )
         traffic_text.pack(fill="both", expand=True, padx=10, pady=5)
 
         def update_traffic():
             try:
-                result = subprocess.run(["netstat", "-an"], capture_output=True, text=True, shell=True)
+                result = subprocess.run(
+                    ["netstat", "-an"], capture_output=True, text=True, shell=True
+                )
                 output = result.stdout if result.returncode == 0 else result.stderr
 
                 filtered_lines = []
@@ -2933,7 +3419,9 @@ class FirewallManagerApp:
                             protocol = parts[0]
                             local_address = parts[1]
                             remote_address = parts[2]
-                            filtered_lines.append(f"{protocol} | Local: {local_address} | Remote: {remote_address}")
+                            filtered_lines.append(
+                                f"{protocol} | Local: {local_address} | Remote: {remote_address}"
+                            )
 
                 traffic_text.config(state="normal")
                 traffic_text.delete("1.0", "end")
@@ -2946,11 +3434,9 @@ class FirewallManagerApp:
 
         update_traffic()
 
-        tk.Label(
-            monitoring_frame,
-            text="Bandwidth Usage",
-            **self.label_style()
-        ).pack(pady=5)
+        tk.Label(monitoring_frame, text="Bandwidth Usage", **self.label_style()).pack(
+            pady=5
+        )
 
         bandwidth_text = tk.Text(
             monitoring_frame,
@@ -2959,7 +3445,7 @@ class FirewallManagerApp:
             fg="#ECF0F1",
             wrap="none",
             state="disabled",
-            height=20
+            height=20,
         )
         bandwidth_text.pack(fill="both", expand=True, padx=10, pady=5)
 
@@ -2968,8 +3454,12 @@ class FirewallManagerApp:
                 bandwidth_data = []
                 for conn in psutil.net_connections(kind="inet"):
                     if conn.laddr and conn.raddr:
-                        app_name = psutil.Process(conn.pid).name() if conn.pid else "Unknown"
-                        bandwidth_data.append(f"{app_name} | Local: {conn.laddr} | Remote: {conn.raddr}")
+                        app_name = (
+                            psutil.Process(conn.pid).name() if conn.pid else "Unknown"
+                        )
+                        bandwidth_data.append(
+                            f"{app_name} | Local: {conn.laddr} | Remote: {conn.raddr}"
+                        )
 
                 bandwidth_text.config(state="normal")
                 bandwidth_text.delete("1.0", "end")
@@ -2983,9 +3473,7 @@ class FirewallManagerApp:
         update_bandwidth()
 
         tk.Label(
-            monitoring_frame,
-            text="Intrusion Detection",
-            **self.label_style()
+            monitoring_frame, text="Intrusion Detection", **self.label_style()
         ).pack(pady=5)
 
         intrusion_text = tk.Text(
@@ -2995,14 +3483,16 @@ class FirewallManagerApp:
             fg="#ECF0F1",
             wrap="none",
             state="disabled",
-            height=20
+            height=20,
         )
         intrusion_text.pack(fill="both", expand=True, padx=10, pady=5)
 
         def detect_intrusions():
             try:
                 suspicious_patterns = ["192.168.1.1", "malicious_ip"]
-                result = subprocess.run(["netstat", "-an"], capture_output=True, text=True, shell=True)
+                result = subprocess.run(
+                    ["netstat", "-an"], capture_output=True, text=True, shell=True
+                )
                 output = result.stdout if result.returncode == 0 else result.stderr
 
                 detected_intrusions = []
@@ -3023,14 +3513,16 @@ class FirewallManagerApp:
 
     def open_live_data_viewer(self):
         logging.info("Opening live data viewer.")
-        live_data_window, live_data_frame = self.create_scrollable_window("Live Data Viewer", width=800, height=600)
+        live_data_window, live_data_frame = self.create_scrollable_window(
+            "Live Data Viewer", width=800, height=600
+        )
 
         tk.Label(
             live_data_frame,
             text="Live Network Traffic",
             font=self.fonts["subheader"],
             fg=self.color_theme["foreground"],
-            bg=self.color_theme["background"]
+            bg=self.color_theme["background"],
         ).pack(pady=10)
 
         traffic_text = tk.Text(
@@ -3040,13 +3532,15 @@ class FirewallManagerApp:
             fg=self.color_theme["entry_fg"],
             wrap="none",
             state="disabled",
-            height=20
+            height=20,
         )
         traffic_text.pack(fill="both", expand=True, padx=10, pady=10)
 
         def update_traffic():
             try:
-                result = subprocess.run(["netstat", "-an"], capture_output=True, text=True, shell=True)
+                result = subprocess.run(
+                    ["netstat", "-an"], capture_output=True, text=True, shell=True
+                )
                 output = result.stdout if result.returncode == 0 else result.stderr
 
                 filtered_lines = []
@@ -3057,7 +3551,9 @@ class FirewallManagerApp:
                             protocol = parts[0]
                             local_address = parts[1]
                             remote_address = parts[2]
-                            filtered_lines.append(f"{protocol} | Local: {local_address} | Remote: {remote_address}")
+                            filtered_lines.append(
+                                f"{protocol} | Local: {local_address} | Remote: {remote_address}"
+                            )
 
                 traffic_text.config(state="normal")
                 traffic_text.delete("1.0", "end")
@@ -3070,9 +3566,11 @@ class FirewallManagerApp:
 
         update_traffic()
 
+
 _application_initialized = False
 
 INITIALIZATION_FLAG_FILE = "app_initialized.flag"
+
 
 def main():
     logging.info("Starting main function.")
@@ -3081,7 +3579,9 @@ def main():
         print("Starting application...")
 
         if not is_admin():
-            logging.warning("Admin privileges not detected. Attempting to relaunch as admin.")
+            logging.warning(
+                "Admin privileges not detected. Attempting to relaunch as admin."
+            )
             relaunch_as_admin()
 
         if not check_python_installation():
@@ -3118,12 +3618,15 @@ def main():
             os.remove(INITIALIZATION_FLAG_FILE)
         logging.info("Main function completed.")
 
+
 if __name__ == "__main__":
     logging.info("Starting the application entry point.")
     print("Starting the application...")
 
     if not is_admin():
-        logging.warning("Admin privileges not detected. Attempting to relaunch as admin.")
+        logging.warning(
+            "Admin privileges not detected. Attempting to relaunch as admin."
+        )
         relaunch_as_admin()
 
     try:
