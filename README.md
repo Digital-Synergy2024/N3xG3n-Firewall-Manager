@@ -113,7 +113,10 @@ N3xG3n Firewall Manager is a comprehensive GUI-based tool for managing Windows F
      ```
 
 4. Start the application:
-   - Run the N3xG3n_FireWall_Manager.exe
+   - Run the `N3xG3n_FireWall_Manager.exe` to start the tool
+     ```bash
+     N3xG3n_FireWall_Manager.exe
+     ```
 
 ---
 
